@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{D7A92F7E-5BC9-44C1-A4B5-A2FE32CFC405}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CompatCheckAndMigrate</RootNamespace>
+    <AssemblyName>CompatCheckAndMigrate</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <IsWebBootstrapper>true</IsWebBootstrapper>
+    <PublishUrl>ftp://172.30.173.21/</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Web</InstallFrom>
+    <UpdateEnabled>true</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <InstallUrl>http://www.azuremigration.com/</InstallUrl>
+    <SupportUrl>http://www.azuremigration.com</SupportUrl>
+    <ProductName>Azure Websites Migration Assistant</ProductName>
+    <PublisherName>MS Open Tech</PublisherName>
+    <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
+    <WebPage>clickonce.htm</WebPage>
+    <ApplicationRevision>12</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup />
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>66F37E5E7A4849038BD69132CB37CBB8CCEE8B85</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>AzureWebsitesMigrationAssistant_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>true</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup />
+  <PropertyGroup />
+  <PropertyGroup />
+  <PropertyGroup>
+    <NoWin32Manifest>true</NoWin32Manifest>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <DelaySign>false</DelaySign>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Web.Administration, Version=7.9.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Windows\System32\inetsrv\Microsoft.Web.Administration.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Delegation, Version=7.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\IIS\Microsoft Web Deploy V3\Microsoft.Web.Delegation.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Deployment, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\IIS\Microsoft Web Deploy V3\Microsoft.Web.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.PlatformInstaller, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Configuration.Install" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Management.Automation" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Controls\ConfirmationControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ConfirmationControl.Designer.cs">
+      <DependentUpon>ConfirmationControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ContentAndDbMigrationControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ContentAndDbMigrationControl.Designer.cs">
+      <DependentUpon>ContentAndDbMigrationControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\AddRemoteServers.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\AddRemoteServers.Designer.cs">
+      <DependentUpon>AddRemoteServers.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\InstallerControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\InstallerControl.Designer.cs">
+      <DependentUpon>InstallerControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\InstallerItemControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\InstallerItemControl.Designer.cs">
+      <DependentUpon>InstallerItemControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MigrationCandidatesControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\MigrationCandidatesControl.Designer.cs">
+      <DependentUpon>MigrationCandidatesControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MigrationSite.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\MigrationSite.Designer.cs">
+      <DependentUpon>MigrationSite.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\PublishStatus.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\PublishStatus.Designer.cs">
+      <DependentUpon>PublishStatus.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ReadinessReportControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ReadinessReportControl.Designer.cs">
+      <DependentUpon>ReadinessReportControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\RemoteServerControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\RemoteServerControl.Designer.cs">
+      <DependentUpon>RemoteServerControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SaveReadinessReportControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\SaveReadinessReportControl.Designer.cs">
+      <DependentUpon>SaveReadinessReportControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SendFeedbackControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\SendFeedbackControl.Designer.cs">
+      <DependentUpon>SendFeedbackControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SiteItemControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\SiteItemControl.Designer.cs">
+      <DependentUpon>SiteItemControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SiteStatusControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\SiteStatusControl.Designer.cs">
+      <DependentUpon>SiteStatusControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Helpers\Application.cs" />
+    <Compile Include="Helpers\ApplicationPool.cs" />
+    <Compile Include="Helpers\IISServers.cs" />
+    <Compile Include="Helpers\RemoteSystemInfos.cs" />
+    <Compile Include="Helpers\Impersonator.cs" />
+    <Compile Include="Helpers\LoggedOnUser.cs" />
+    <Compile Include="Helpers\PublishManager.cs" />
+    <Compile Include="Helpers\RemoteSystemInfo.cs" />
+    <Compile Include="Helpers\Binding.cs" />
+    <Compile Include="Helpers\ConfigReader.cs" />
+    <Compile Include="Helpers\Database.cs" />
+    <Compile Include="Helpers\ElementCountMap.cs" />
+    <Compile Include="Helpers\GacAssemblyDetector.cs" />
+    <Compile Include="Helpers\HashSet.cs" />
+    <Compile Include="Helpers\IISInfoReader.cs" />
+    <Compile Include="Helpers\IISServer.cs" />
+    <Compile Include="Helpers\MetabaseReader.cs" />
+    <Compile Include="Helpers\MWDWrapper.cs" />
+    <Compile Include="Helpers\PublishSettings.cs" />
+    <Compile Include="Helpers\SafeLogonHandle.cs" />
+    <Compile Include="Helpers\Site.cs" />
+    <Compile Include="Helpers\WebPlatformInstallHelper.cs" />
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ObjectModel\GoToWizardStepEventArgs.cs" />
+    <Compile Include="ObjectModel\IWizardStep.cs" />
+    <Compile Include="ObjectModel\WizardSteps.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Helpers\MigrationConstants.cs" />
+    <Compile Include="Helpers\Helper.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <EmbeddedResource Include="Controls\ConfirmationControl.resx">
+      <DependentUpon>ConfirmationControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ContentAndDbMigrationControl.resx">
+      <DependentUpon>ContentAndDbMigrationControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\AddRemoteServers.resx">
+      <DependentUpon>AddRemoteServers.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\InstallerControl.resx">
+      <DependentUpon>InstallerControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\InstallerItemControl.resx">
+      <DependentUpon>InstallerItemControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\MigrationCandidatesControl.resx">
+      <DependentUpon>MigrationCandidatesControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\MigrationSite.resx">
+      <DependentUpon>MigrationSite.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\PublishStatus.resx">
+      <DependentUpon>PublishStatus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ReadinessReportControl.resx">
+      <DependentUpon>ReadinessReportControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\RemoteServerControl.resx">
+      <DependentUpon>RemoteServerControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\SaveReadinessReportControl.resx">
+      <DependentUpon>SaveReadinessReportControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\SendFeedbackControl.resx">
+      <DependentUpon>SendFeedbackControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\SiteItemControl.resx">
+      <DependentUpon>SiteItemControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\SiteStatusControl.resx">
+      <DependentUpon>SiteStatusControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="AzureWebsitesMigrationAssistant_TemporaryKey.pfx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="oldclickonce.cmd" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\IIS_MergedSchema.xml" />
+    <None Include="Resources\Busy.gif" />
+    <None Include="Resources\Search.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AnimatedProgressBar.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Error.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\OK.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icon-drawer-processing-active.gif" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
