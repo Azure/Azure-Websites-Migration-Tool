@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved. 
+﻿// Copyright (c) Microsoft Technologies, Inc.  All rights reserved. 
 // Licensed under the Apache License, Version 2.0.  
 // See License.txt in the project root for license information.
 
@@ -16,7 +16,7 @@ namespace CompatCheckAndMigrate.Controls
     public partial class ContentAndDbMigrationControl : UserControl, IWizardStep
     {
         private BackgroundWorker _worker;
-        public IISServer Server { get; private set; }
+        private IISServers IISServers;
         private readonly Dictionary<string, PublishStatus> _publishControlMap;
         private bool _providerSettingsInitialized;
 
@@ -42,7 +42,7 @@ namespace CompatCheckAndMigrate.Controls
         {
             if (state != null)
             {
-                this.Server = (IISServer)state;
+                this.IISServers = (IISServers)state;
             }
 
             if (!_providerSettingsInitialized)
@@ -67,54 +67,61 @@ namespace CompatCheckAndMigrate.Controls
             }
         }
 
-        public void UpdateProgressbar(string siteName)
+        public void UpdateProgressbar(string serverAndSiteName)
         {
             PublishStatus pubStatus;
-            if (_publishControlMap.TryGetValue(siteName, out pubStatus))
+            if (_publishControlMap.TryGetValue(serverAndSiteName, out pubStatus))
             {
-                MainForm.WriteTrace("Incrementing progress bar for {0}", siteName);
+                MainForm.WriteTrace("Incrementing progress bar for {0}", serverAndSiteName);
                 pubStatus.PerformStep();
             }
             else
             {
-                MainForm.WriteTrace("Not Incrementing progress bar for {0} since status control was not found", siteName);
+                MainForm.WriteTrace("Not Incrementing progress bar for {0} since status control was not found", serverAndSiteName);
             }
         }
 
-        public void SetProgressbarMax(string siteName, int maxValue)
+        public void SetProgressbarMax(string serverAndSiteName, int maxValue)
         {
             PublishStatus pubStatus;
-            if (_publishControlMap.TryGetValue(siteName, out pubStatus))
+            if (_publishControlMap.TryGetValue(serverAndSiteName, out pubStatus))
             {
-                MainForm.WriteTrace("Setting progress bar max for {0} to {1}", siteName, maxValue);
+                if (maxValue == 0)
+                {
+                    // set progress bar to completed
+                    pubStatus.UpdateMaxProgressBarvalue(1);
+                    pubStatus.PerformStep();
+                }
+
+                MainForm.WriteTrace("Setting progress bar max for {0} to {1}", serverAndSiteName, maxValue);
                 pubStatus.UpdateMaxProgressBarvalue(maxValue);
             }
             else
             {
-                MainForm.WriteTrace("Not setting progress bar max for {0} to {1} since status control was not found", siteName, maxValue);
+                MainForm.WriteTrace("Not setting progress bar max for {0} to {1} since status control was not found", serverAndSiteName, maxValue);
             }
         }
 
-        public void SetContentPublished(string siteName, bool success)
+        public void SetContentPublished(string serverAndSiteName, bool success)
         {
             PublishStatus pubStatus;
-            if (_publishControlMap.TryGetValue(siteName, out pubStatus))
+            if (_publishControlMap.TryGetValue(serverAndSiteName, out pubStatus))
             {
-                MainForm.WriteTrace("Setting content publish completion for {0} to {1}", siteName, success);
+                MainForm.WriteTrace("Setting content publish completion for {0} to {1}", serverAndSiteName, success);
                 pubStatus.ContentPublished(success);
             }
             else
             {
-                MainForm.WriteTrace("Not Setting content publish completion for {0} to {1} since control was not found", siteName, success);
+                MainForm.WriteTrace("Not Setting content publish completion for {0} to {1} since control was not found", serverAndSiteName, success);
             }
         }
 
-        public void SetDbPublished(string siteName, bool success)
+        public void SetDbPublished(string serverAndSiteName, bool success)
         {
             PublishStatus pubStatus;
-            if (_publishControlMap.TryGetValue(siteName, out pubStatus))
+            if (_publishControlMap.TryGetValue(serverAndSiteName, out pubStatus))
             {
-                MainForm.WriteTrace("Setting db publish completion for {0} to {1}", siteName, success);
+                MainForm.WriteTrace("Setting db publish completion for {0} to {1}", serverAndSiteName, success);
                 pubStatus.DbPublished(success);
             }
         }
@@ -150,57 +157,63 @@ namespace CompatCheckAndMigrate.Controls
 
             if (retry)
             {
-                 MainForm.WriteTrace("Retrying ..");
-                foreach (var site in this.Server.Sites.Where(s => (!s.ContentPublishState || !s.DbPublishState)))
+                MainForm.WriteTrace("Retrying ..");
+                foreach (var server in this.IISServers.Servers.Values)
                 {
-                    PublishStatus pubStatus;
-                    if (_publishControlMap.TryGetValue(site.SiteName, out pubStatus))
+                    foreach (var site in server.Sites.Where(s => (!s.ContentPublishState || !s.DbPublishState)))
                     {
-                        if (!site.ContentPublishState)
+                        PublishStatus pubStatus;
+                        if (_publishControlMap.TryGetValue(site.ServerName + site.SiteName, out pubStatus))
                         {
-                            pubStatus.ResetContentStatus();
+                            if (!site.ContentPublishState)
+                            {
+                                pubStatus.ResetContentStatus();
+                            }
+                            else
+                            {
+                                pubStatus.ResetDbStatus();
+                            }
                         }
                         else
                         {
-                            pubStatus.ResetDbStatus();
+                            MainForm.WriteTrace("No control found for site: {0}", site.SiteName);
                         }
-                    }
-                    else
-                    {
-                        MainForm.WriteTrace("No control found for site: {0}", site.SiteName);
                     }
                 }
             }
             else
             {
-                foreach (var site in this.Server.Sites.Where(s => s.PublishProfile != null && string.IsNullOrEmpty(s.SiteCreationError)))
+                foreach (var server in this.IISServers.Servers.Values)
                 {
-                    string contentTraceFileName = Helper.NewTempFile;
-                    string dbTraceFileName = Helper.NewTempFile;
-                    site.PublishProfile.ContentTraceFile = contentTraceFileName;
-                    site.PublishProfile.DbTraceFile = dbTraceFileName;
-                    var pubStatus = new PublishStatus(site.SiteName,
-                        site.PublishProfile.DestinationAppUrl,
-                        site.Databases != null && site.Databases.Count > 0,
-                        contentTraceFileName,
-                        dbTraceFileName);
-
-                    MainForm.WriteTrace("Adding control to map for site: {0}", site.SiteName);
-                    _publishControlMap[site.SiteName] = pubStatus;
-                    pubStatus.Dock = DockStyle.Top;
-                    statusPanel.Controls.Add(pubStatus);
-                }
-
-                foreach (var site in this.Server.Sites.Where(s => s.PublishProfile != null && !string.IsNullOrEmpty(s.SiteCreationError)))
-                {
-                    PublishStatus pubStatus;
-                    if (!_publishControlMap.TryGetValue(site.SiteName, out pubStatus))
+                    foreach (var site in server.Sites.Where(s => s.PublishProfile != null && string.IsNullOrEmpty(s.SiteCreationError)))
                     {
-                        MainForm.WriteTrace("Adding control to map for site: {0} with site or db creation error", site.SiteName);
-                        pubStatus = new PublishStatus(site.SiteName, site.SiteCreationError);
-                        _publishControlMap[site.SiteName] = pubStatus;
+                        string contentTraceFileName = Helper.NewTempFile;
+                        string dbTraceFileName = Helper.NewTempFile;
+                        site.PublishProfile.ContentTraceFile = contentTraceFileName;
+                        site.PublishProfile.DbTraceFile = dbTraceFileName;
+                        var pubStatus = new PublishStatus(site.SiteName,
+                            site.PublishProfile.DestinationAppUrl,
+                            site.Databases != null && site.Databases.Count > 0,
+                            contentTraceFileName,
+                            dbTraceFileName);
+
+                        MainForm.WriteTrace("Adding control to map for site: {0}", site.SiteName);
+                        _publishControlMap[site.ServerName + site.SiteName] = pubStatus;
                         pubStatus.Dock = DockStyle.Top;
                         statusPanel.Controls.Add(pubStatus);
+                    }
+
+                    foreach (var site in server.Sites.Where(s => s.PublishProfile != null && !string.IsNullOrEmpty(s.SiteCreationError)))
+                    {
+                        PublishStatus pubStatus;
+                        if (!_publishControlMap.TryGetValue(site.ServerName + site.SiteName, out pubStatus))
+                        {
+                            MainForm.WriteTrace("Adding control to map for site: {0} with site or db creation error", site.SiteName);
+                            pubStatus = new PublishStatus(site.SiteName, site.SiteCreationError);
+                            _publishControlMap[site.ServerName + site.SiteName] = pubStatus;
+                            pubStatus.Dock = DockStyle.Top;
+                            statusPanel.Controls.Add(pubStatus);
+                        }
                     }
                 }
             }
@@ -211,34 +224,40 @@ namespace CompatCheckAndMigrate.Controls
                 PublishManager manager = new PublishManager();
                 if (retry)
                 {
-                    foreach (var site in this.Server.Sites.Where(s => (!s.ContentPublishState || !s.DbPublishState)))
+                    foreach (var server in this.IISServers.Servers.Values)
                     {
-                        if (!site.ContentPublishState)
+                        foreach (var site in server.Sites.Where(s => (!s.ContentPublishState || !s.DbPublishState)))
                         {
-                            MainForm.WriteTrace("Queuing operation for site: {0}", site.SiteName);
-                            var operation = new PublishContentOperation(site, this);
-                            manager.Enqueue(operation);
-                        }
+                            if (!site.ContentPublishState)
+                            {
+                                MainForm.WriteTrace("Queuing operation for site: {0}", site.SiteName);
+                                var operation = new PublishContentOperation(site, this);
+                                manager.Enqueue(operation);
+                            }
 
-                        if (!site.DbPublishState)
-                        {
-                            MainForm.WriteTrace("Queing another operation for db for site: {0}", site.SiteName);
-                            manager.Enqueue(new PublishDbOperation(site, this));
+                            if (!site.DbPublishState)
+                            {
+                                MainForm.WriteTrace("Queing another operation for db for site: {0}", site.SiteName);
+                                manager.Enqueue(new PublishDbOperation(site, this));
+                            }
                         }
                     }
                 }
                 else
                 {
-                    foreach (var site in this.Server.Sites.Where(s => s.PublishProfile != null && string.IsNullOrEmpty(s.SiteCreationError)))
+                    foreach (var server in this.IISServers.Servers.Values)
                     {
-
-                        MainForm.WriteTrace("Queuing operation for site: {0}", site.SiteName);
-                        var operation = new PublishContentOperation(site, this);
-                        manager.Enqueue(operation);
-                        if (operation.HasDatabase)
+                        foreach (var site in server.Sites.Where(s => s.PublishProfile != null && string.IsNullOrEmpty(s.SiteCreationError)))
                         {
-                            MainForm.WriteTrace("Queing another operation for db for site: {0}", site.SiteName);
-                            manager.Enqueue(new PublishDbOperation(site, this));
+
+                            MainForm.WriteTrace("Queuing operation for site: {0}", site.SiteName);
+                            var operation = new PublishContentOperation(site, this);
+                            manager.Enqueue(operation);
+                            if (operation.HasDatabase)
+                            {
+                                MainForm.WriteTrace("Queing another operation for db for site: {0}", site.SiteName);
+                                manager.Enqueue(new PublishDbOperation(site, this));
+                            }
                         }
                     }
                 }
@@ -261,8 +280,14 @@ namespace CompatCheckAndMigrate.Controls
                     MessageBox.Show(runWorkerCompletedEventArgs.Error.Message);
                 }
 
-                bool hasPublishErrors = Server.Sites.Any(s => !s.ContentPublishState || !s.DbPublishState);
-                bool hasSiteCreationErrors = Server.Sites.Any(s => !string.IsNullOrEmpty(s.SiteCreationError));
+                bool hasPublishErrors = false;
+                bool hasSiteCreationErrors = false;
+                foreach (var server in this.IISServers.Servers.Values)
+                {
+                    hasPublishErrors |= server.Sites.Any(s => !s.ContentPublishState || !s.DbPublishState);
+                    hasSiteCreationErrors |= server.Sites.Any(s => !string.IsNullOrEmpty(s.SiteCreationError));
+                }
+
                 this.feedbackButton.Text = "Send Error Report";
                 if (!hasSiteCreationErrors && !hasPublishErrors)
                 {
@@ -293,7 +318,7 @@ namespace CompatCheckAndMigrate.Controls
 
         private void feedbackButton_Click(object sender, EventArgs e)
         {
-            FireGoToEvent(WizardSteps.FeedbackPage, this.Server);
+            FireGoToEvent(WizardSteps.FeedbackPage, this.IISServers);
         }
 
         private void btnClose_Click(object sender, EventArgs e)
@@ -303,7 +328,7 @@ namespace CompatCheckAndMigrate.Controls
 
         private void btnBack_Click(object sender, EventArgs e)
         {
-            FireGoToEvent(WizardSteps.SiteStep, this.Server, true);
+            FireGoToEvent(WizardSteps.SiteStep, this.IISServers, true);
         }
     }
 }

@@ -43,6 +43,7 @@
             this.busyDescriptionLabel = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.BackButton = new System.Windows.Forms.Button();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.busyPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -124,9 +125,9 @@
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(351, 422);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(119, 13);
+            this.label5.Size = new System.Drawing.Size(128, 13);
             this.label5.TabIndex = 12;
-            this.label5.Text = "to upload to Azure later.";
+            this.label5.Text = "to upload to Azure later or";
             // 
             // siteTree
             // 
@@ -203,11 +204,24 @@
             this.BackButton.UseVisualStyleBackColor = false;
             this.BackButton.Click += new System.EventHandler(this.BackButton_Click);
             // 
+            // linkLabel1
+            // 
+            this.linkLabel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Location = new System.Drawing.Point(476, 422);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(196, 13);
+            this.linkLabel1.TabIndex = 18;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "deploy using existing publishing settings.";
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            // 
             // ReadinessReportControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
+            this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.BackButton);
             this.Controls.Add(this.busyPanel);
             this.Controls.Add(this.label5);
@@ -220,7 +234,6 @@
             this.Controls.Add(this.siteTree);
             this.Name = "ReadinessReportControl";
             this.Size = new System.Drawing.Size(763, 461);
-            // this.Load += new System.EventHandler(this.ReadinessReportControl_Load);
             this.busyPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
@@ -243,5 +256,6 @@
         private System.Windows.Forms.Label busyDescriptionLabel;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Button BackButton;
+        private System.Windows.Forms.LinkLabel linkLabel1;
     }
 }

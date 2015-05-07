@@ -8,12 +8,12 @@ namespace CompatCheckAndMigrate.Controls
 {
     public partial class SiteStatusControl : UserControl, IWizardStep
     {
-        private IISServer _server;
+        private IISServers IISServers;
 
         public SiteStatusControl()
         {
             InitializeComponent();
-            _server = null;
+            IISServers = null;
         }
 
         public event EventHandler<GoToWizardStepEventArgs> GoTo;
@@ -22,7 +22,7 @@ namespace CompatCheckAndMigrate.Controls
         {
             if (state != null)
             {
-                this._server = (IISServer)state;
+                this.IISServers = (IISServers)state;
             }
         }
 
@@ -37,12 +37,12 @@ namespace CompatCheckAndMigrate.Controls
 
         private void btnFeedback_Click(object sender, EventArgs e)
         {
-            FireGoToEvent(WizardSteps.FeedbackPage, this._server);
+            FireGoToEvent(WizardSteps.FeedbackPage, this.IISServers);
         }
 
         private void btnInstall_Click(object sender, EventArgs e)
         {
-            FireGoToEvent(WizardSteps.InstallWebDeploy, this._server);
+            FireGoToEvent(WizardSteps.InstallWebDeploy, this.IISServers);
         }
 
         private void btnClose_Click(object sender, EventArgs e)
@@ -52,13 +52,16 @@ namespace CompatCheckAndMigrate.Controls
 
         private void SiteStatusControl_Load(object sender, EventArgs e)
         {
-            if (this._server != null)
+            if (this.IISServers != null)
             {
-                foreach (var site in this._server.Sites.Where(s => s.PublishProfile != null && !string.IsNullOrEmpty(s.PublishProfile.SiteName)))
+                foreach (var server in this.IISServers.Servers.Values)
                 {
-                    var siteItem = new SiteItemControl(site.PublishProfile.SiteName, string.IsNullOrEmpty(site.SiteCreationError));
-                    siteItem.Dock = DockStyle.Top;
-                    statusPanel.Controls.Add(siteItem);
+                    foreach (var site in server.Sites.Where(s => s.PublishProfile != null && !string.IsNullOrEmpty(s.PublishProfile.SiteName)))
+                    {
+                        var siteItem = new SiteItemControl(site.PublishProfile.SiteName, string.IsNullOrEmpty(site.SiteCreationError));
+                        siteItem.Dock = DockStyle.Top;
+                        statusPanel.Controls.Add(siteItem);
+                    }
                 }
             }
         }

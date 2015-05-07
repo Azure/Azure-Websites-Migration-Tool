@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved. 
+﻿// Copyright (c) Microsoft Technologies, Inc.  All rights reserved. 
 // Licensed under the Apache License, Version 2.0.  
 // See License.txt in the project root for license information.
 using System;
@@ -36,7 +36,11 @@ namespace CompatCheckAndMigrate.Helpers
 
         public static int MaxConcurrentThreads 
         {
-            get { return MigrationConstants.DefaultMaxPerProcessorThreadCount * Environment.ProcessorCount; }
+            get
+            {
+                // return 1;
+                return MigrationConstants.DefaultMaxPerProcessorThreadCount * Environment.ProcessorCount;
+            }
         }
 
         public static bool IsComputerReachable(string computername)
@@ -282,9 +286,6 @@ namespace CompatCheckAndMigrate.Helpers
             {
                 if (string.IsNullOrEmpty(_azureMigrationId))
                 {
-                    var remoteInfo = RemoteSystemInfos.Servers;
-                    // TODO: MAKE THIS WORK WITH MULTIPLE SERVERS
-                    // var systemName = remoteInfo != null ? remoteInfo.ComputerName : "localhost";
                     var systemName = "localhost";
                     _azureMigrationId = GetRegistryValue<string>(MigrationConstants.MigrationIDPath, systemName, string.Empty);
                     if (string.IsNullOrEmpty(_azureMigrationId))
@@ -390,7 +391,7 @@ namespace CompatCheckAndMigrate.Helpers
 
         public static string CodePlexRepoLink
         {
-            get { return ConfigurationManager.AppSettings["CodePlexRepoLink"] ?? "http://websiteassist.codeplex.com"; }
+            get { return ConfigurationManager.AppSettings["CodePlexRepoLink"] ?? "https://github.com/Azure/Azure-Websites-Migration-Tool"; }
         }
 
         public static string CompatApi
@@ -540,15 +541,19 @@ namespace CompatCheckAndMigrate.Helpers
         public static string NewTempFile
         {
             get
-            {
-                return Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+            {return Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
             }
         }
 
         public static Collection<PSObject> GetScomServers()
         {
-            string getServersScript = "Import-Module OperationsManager;";
-            getServersScript += "Get-ScomAgent | %{$_.DisplayName}; ";
+            // we use the older snap-in to ensure compatibility with older SCOM versions
+            string getServersScript = "Add-PSSnapin Microsoft.EnterpriseManagement.OperationsManager.Client;"
+                                      + "set-location 'OperationsManagerMonitoring::' | out-null;"
+                                      + "new-managementGroupConnection -ConnectionString:localhost | out-null;"
+                                      + "set-location 'localhost';"
+                                      + "Get-RemotelyManagedComputer | %{$_.name};"
+                                      + "Get-Agent | %{$_.name};";
             return RunCommand(getServersScript, null);
         }
 

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved. 
+﻿// Copyright (c) Microsoft Technologies, Inc.  All rights reserved. 
 // Licensed under the Apache License, Version 2.0.  
 // See License.txt in the project root for license information.
 
@@ -144,7 +144,19 @@ namespace CompatCheckAndMigrate.Controls
                 SiteStatusBox.Image = success ? Properties.Resources.OK : Properties.Resources.Error;
                 siteStatusLink.Visible = !success;
                 siteLinkLabel.Visible = success && (!_hasDatabase || (_hasDatabase && _dbPublished));
-                siteProgressBar.Value = (success || SiteStatusBox.Image == Properties.Resources.OK) ? siteProgressBar.Maximum : 0;
+                if (success || SiteStatusBox.Image == Properties.Resources.OK)
+                {
+                    if (siteProgressBar.Maximum == 0)
+                    {
+                        siteProgressBar.Maximum = 1;
+                        siteProgressBar.Value = 1;
+                    }
+                    else
+                    {
+                        siteProgressBar.Value = siteProgressBar.Maximum;
+                    }
+                }
+
             }));
         }
 

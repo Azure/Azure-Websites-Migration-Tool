@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved. 
+﻿// Copyright (c) Microsoft Technologies, Inc.  All rights reserved. 
 // Licensed under the Apache License, Version 2.0.  
 // See License.txt in the project root for license information.
 
@@ -84,7 +84,7 @@ namespace CompatCheckAndMigrate.Helpers
                 MessageBox.Show(ex.ToString());
             }
 
-            _writer.WriteLine(message);
+            _writer.WriteLine(DateTime.Now + " : " + message);
             MainForm.WriteTrace(message);
         }
 
@@ -99,7 +99,7 @@ namespace CompatCheckAndMigrate.Helpers
             DeploymentObjectChangedEventArgs ChangedEvent = traceEvent as DeploymentObjectChangedEventArgs;
             if (ChangedEvent != null)
             {
-                _control.UpdateProgressbar(this.LocalSite.SiteName);
+                _control.UpdateProgressbar(this.LocalSite.ServerName + this.LocalSite.SiteName);
             }
             else
             {
@@ -247,11 +247,12 @@ namespace CompatCheckAndMigrate.Helpers
                         if (!setSize)
                         {
                             LogTrace("Content Published Succesfully For Site: {0} to {1} ", _localSite.SiteName, _publishSettings.SiteName);
-                            Helper.UpdateStatus(_localSite.SiteName);
+                            // TODO: commenting this out for now while fixing multithreading
+                            // Helper.UpdateStatus(_localSite.SiteName);
                         }
                         else
                         {
-                            _control.SetProgressbarMax(_localSite.SiteName, summary.TotalChanges);
+                            _control.SetProgressbarMax(this.LocalSite.ServerName + this.LocalSite.SiteName, summary.TotalChanges);
                         }
                     }
                     catch (Exception ex)
@@ -275,7 +276,7 @@ namespace CompatCheckAndMigrate.Helpers
 
             if (!setSize)
             {
-                _control.SetContentPublished(this._localSite.SiteName, publishSucceeded);
+                _control.SetContentPublished(this.LocalSite.ServerName + this.LocalSite.SiteName, publishSucceeded);
             }
 
             this.PublishStatus = publishSucceeded;
@@ -337,7 +338,7 @@ namespace CompatCheckAndMigrate.Helpers
         public bool PublishDatabase(DeploymentBaseOptions sourceBaseOptions, DeploymentBaseOptions destBaseOptions, string provider, bool logException)
         {
             bool publishSucceeded = true;
-            MainForm.WriteTrace("Starting db publish for {0}", _localSite.SiteName);
+            this.LogTrace("Starting db publish for {0}", _localSite.SiteName);
             try
             {
                 var providerOption = new DeploymentProviderOptions(provider);
@@ -352,7 +353,7 @@ namespace CompatCheckAndMigrate.Helpers
                         }
                         catch (Exception ex)
                         {
-                            MainForm.WriteTrace("Error trying to set value: {0} for setting: {1}, {2}", setting, providerSetting.Name, ex.ToString());
+                            this.LogTrace("Error trying to set value: {0} for setting: {1}, {2}", setting, providerSetting.Name, ex.ToString());
                         }
                     }
                 }
@@ -365,11 +366,10 @@ namespace CompatCheckAndMigrate.Helpers
                 }
 
                 providerOption.Path = path;
-                // TODO: MAKE THIS WORK WITH MULTIPLE SERVERS
-                var remoteSystemInfo = RemoteSystemInfos.Servers.Values.First();
-                if (!UseTrustedConnection(_localSite.Databases[0].DBConnectionString))
+                RemoteSystemInfo remoteSystemInfo = null;
+                if (RemoteSystemInfos.Servers.Any() && UseTrustedConnection(_localSite.Databases[0].DBConnectionString))
                 {
-                    remoteSystemInfo = null;
+                    remoteSystemInfo = RemoteSystemInfos.Servers[_localSite.ServerName];
                 }
 
                 using (Impersonator.ImpersonateUser(remoteSystemInfo))
@@ -378,24 +378,24 @@ namespace CompatCheckAndMigrate.Helpers
                         DeploymentManager.CreateObject(providerOption,
                             sourceBaseOptions))
                     {
-                        LogTrace("Starting DB Sync for: {0} using {1}",
+                        this.LogTrace("Starting DB Sync for: {0} using {1}",
                             _localSite.Databases[0].DbConnectionStringBuilder.InitialCatalog, provider);
-                        LogTrace("Publishing database as: {0}", destBaseOptions.UserName);
+                        this.LogTrace("Publishing database as: {0}", destBaseOptions.UserName);
 
                         try
                         {
                             sourceObject.SyncTo(provider, _publishSettings.SqlDBConnectionString.ConnectionString,
                                 destBaseOptions, new DeploymentSyncOptions());
-                            LogTrace("DB Synced successfully");
+                            this.LogTrace("DB Synced successfully");
                             Helper.UpdateStatus(_localSite.SiteName, true);
                         }
                         catch (Exception ex)
                         {
                             if (logException)
                             {
-                                LogTrace("Error syncing db: {0}",
+                                this.LogTrace("Error syncing db: {0}",
                                     _localSite.Databases[0].DbConnectionStringBuilder.InitialCatalog);
-                                LogTrace(ex.ToString());
+                                this.LogTrace(ex.ToString());
                             }
 
                             publishSucceeded = false;
@@ -429,13 +429,16 @@ namespace CompatCheckAndMigrate.Helpers
             destBaseOptions.TraceLevel = TraceLevel.Verbose;
 
             bool publishSucceeded = true;
-            publishSucceeded = PublishDatabase(sourceBaseOptions, destBaseOptions, "dbDacfx", false);
+            this.LogTrace("Starting db publish for {0}", _localSite.SiteName);
+            publishSucceeded = PublishDatabase(sourceBaseOptions, destBaseOptions, "dbfullsql", true);
             if (!publishSucceeded)
             {
-                publishSucceeded = PublishDatabase(sourceBaseOptions, destBaseOptions, "dbfullsql", true);
+                // this tends to get stuck...
+                destBaseOptions.RetryAttempts = 1;
+                publishSucceeded = PublishDatabase(sourceBaseOptions, destBaseOptions, "dbDacfx", true);
             }
 
-            _control.SetDbPublished(_localSite.SiteName, publishSucceeded);
+            _control.SetDbPublished(this.LocalSite.ServerName + this.LocalSite.SiteName, publishSucceeded);
             _control.UpdateStatusLabel(string.Empty);
 
             this.PublishStatus = publishSucceeded;

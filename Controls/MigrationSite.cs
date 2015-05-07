@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved. 
+﻿// Copyright (c) Microsoft Technologies, Inc.  All rights reserved. 
 // Licensed under the Apache License, Version 2.0.  
 // See License.txt in the project root for license information.
 
@@ -20,6 +20,8 @@ namespace CompatCheckAndMigrate.Controls
         private static readonly Regex RegexGetSiteId = new Regex(@"id=([a-zA-Z0-9-]*)", RegexOptions.IgnoreCase);
 
         private IISServers IISServers;
+        private string publishSettings;
+        private Dictionary<string, string> errorMap;
 
         public MigrationSite()
         {
@@ -34,27 +36,33 @@ namespace CompatCheckAndMigrate.Controls
             if (state != null)
             {
                 this.IISServers = (IISServers)state;
+                foreach (string url in Helper.UrlsForCookie)
+                {
+                    Helper.InternetSetCookie(url, null, "AZMigrationTool = SkipHeaderAndFooter");
+                }
+
+                string urlToNavigate = Helper.UrlCombine(
+                         Helper.PostMigratePortal,
+                         Helper.Results,
+                         Helper.AzureMigrationId);
+                if (isNavigatingBack)
+                {
+                    urlToNavigate = Helper.UrlCombine(Helper.ScmSitePrimary, "/picksubscription/index", Helper.AzureMigrationId);
+                }
+
+                siteBrowser.Navigate("about:blank");
+                siteBrowser.Navigate(urlToNavigate);
+                checkPublishSettingsTimer.Enabled = true;
+            }
+            else
+            {
+                // allow user to upload their own publish settings
+                //this.arePublishSettingsManual = true;
+                //this.uploadPublishingSettingsPanel.Visible = true;
+                //this.siteBrowser.Visible = false;
             }
 
             btnPublish.Visible = false;
-
-            foreach (string url in Helper.UrlsForCookie)
-            {
-                Helper.InternetSetCookie(url, null, "AZMigrationTool = SkipHeaderAndFooter");
-            }
-
-            string urlToNavigate = Helper.UrlCombine(
-                     Helper.PostMigratePortal,
-                     Helper.Results,
-                     Helper.AzureMigrationId);
-            if (isNavigatingBack)
-            {
-                urlToNavigate = Helper.UrlCombine(Helper.ScmSitePrimary, "/picksubscription/index", Helper.AzureMigrationId);
-            }
-
-            siteBrowser.Navigate("about:blank");
-            siteBrowser.Navigate(urlToNavigate);
-            checkPublishSettingsTimer.Enabled = true;
         }
 
         private void siteBrowser_Navigated(object sender, WebBrowserNavigatedEventArgs e)
@@ -151,58 +159,17 @@ namespace CompatCheckAndMigrate.Controls
         {
             try
             {
-                string outerHtml = null;
-
-                this.Invoke(new MethodInvoker(delegate()
+                if (this.publishSettings == null)
                 {
-                    if (siteBrowser.Document != null)
-                    {
-                        var publishElement = siteBrowser.Document.GetElementById("publishprofile");
-                        if (publishElement != null)
-                        {
-                            outerHtml = publishElement.OuterHtml;
-                        }
-                    }
-                }));
+                    publishSettings = GetPublishSettingsFromWebPage();
+                }
 
-                if (!string.IsNullOrEmpty(outerHtml))
+                if (this.IISServers != null && this.IISServers.Servers.Values.Any() && this.publishSettings != null)
                 {
-                    try
+                    this.btnPublish.Invoke(new MethodInvoker(delegate()
                     {
-                        string value = GetInputValue(outerHtml, false);
-                        if (!string.IsNullOrEmpty(value) &&
-                            value.Contains("publishProfile"))
-                        {
-                            checkPublishSettingsTimer.Enabled = false;
-                            Dictionary<string, string> errorMap = CheckSiteForError();
-                            string publishFilePath =
-                                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                                        Helper.AzureMigrationId + ".publishsettings");
-                            using (var writer = new StreamWriter(publishFilePath, false))
-                            {
-                                writer.WriteLine(value);
-                            }
-
-                            if (this.IISServers.Servers.Values.Any())
-                            {
-                                // TODO: FIX FOR MULTIPLE SERVERS / SCALE OUT
-                                this.IISServers.Servers.Values.First().SetPublishSetting(errorMap, value);
-
-                                this.btnPublish.Invoke(new MethodInvoker(delegate()
-                                {
-                                    btnPublish.Visible = true;
-                                }));
-                            }
-                            else
-                            {
-                                Helper.ShowErrorMessageAndExit("Some Error occurred: No sites found to publish");
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.ToString());
-                    }
+                        btnPublish.Visible = true;
+                    }));
                 }
             }
             catch (Exception ex)
@@ -215,46 +182,11 @@ namespace CompatCheckAndMigrate.Controls
         {
             try
             {
-                string outerHtml = null;
+                this.publishSettings = GetPublishSettingsFromWebPage();
 
-                this.Invoke(new MethodInvoker(delegate()
+                foreach (var server in this.IISServers.Servers.Values)
                 {
-                    if (siteBrowser.Document != null)
-                    {
-                        var publishElement = siteBrowser.Document.GetElementById("publishprofile");
-                        if (publishElement != null)
-                        {
-                            outerHtml = publishElement.OuterHtml;
-                        }
-                    }
-                }));
-
-                if (!string.IsNullOrEmpty(outerHtml))
-                {
-                    try
-                    {
-                        string value = GetInputValue(outerHtml, false);
-                        if (!string.IsNullOrEmpty(value) &&
-                            value.Contains("publishProfile"))
-                        {
-                            checkPublishSettingsTimer.Enabled = false;
-                            Dictionary<string, string> errorMap = CheckSiteForError();
-                            string publishFilePath =
-                                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                                        Helper.AzureMigrationId + ".publishsettings");
-                            using (var writer = new StreamWriter(publishFilePath, false))
-                            {
-                                writer.WriteLine(value);
-                            }
-
-                            // TODO: FIX FOR MULTIPLE SERVERS / SCALE OUT
-                            this.IISServers.Servers.Values.First().SetPublishSetting(errorMap, value);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.ToString());
-                    }
+                    server.SetPublishSetting(this.errorMap, this.publishSettings, server.Name);
                 }
             }
             catch (Exception ex)
@@ -272,9 +204,60 @@ namespace CompatCheckAndMigrate.Controls
             }));
         }
 
+        private string GetPublishSettingsFromWebPage()
+        {
+            string outerHtml = null;
+            this.Invoke(new MethodInvoker(delegate()
+            {
+                if (siteBrowser.Document != null)
+                {
+                    var publishElement = siteBrowser.Document.GetElementById("publishprofile");
+                    if (publishElement != null)
+                    {
+                        outerHtml = publishElement.OuterHtml;
+                    }
+                }
+            }));
+
+            if (!string.IsNullOrEmpty(outerHtml))
+            {
+                try
+                {
+                    string value = GetInputValue(outerHtml, false);
+                    if (!string.IsNullOrEmpty(value) &&
+                        value.Contains("publishProfile"))
+                    {
+                        checkPublishSettingsTimer.Enabled = false;
+                        this.errorMap = CheckSiteForError();
+                        string publishFilePath =
+                                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                                    Helper.AzureMigrationId + ".publishsettings");
+                        using (var writer = new StreamWriter(publishFilePath, false))
+                        {
+                            writer.WriteLine(value);
+                        }
+
+                        return value;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString());
+                }
+            }
+
+            return null;
+        }
         private void BackButton_Click(object sender, EventArgs e)
         {
-            FireGoToEvent(WizardSteps.ReadinessReport, this.IISServers);
+            if (this.siteBrowser.CanGoBack)
+            {
+                this.siteBrowser.GoBack();
+            }
+            else
+            {
+                FireGoToEvent(WizardSteps.ReadinessReport, this.IISServers);
+            }
         }
     }
 }

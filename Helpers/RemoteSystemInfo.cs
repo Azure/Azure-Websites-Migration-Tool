@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved. 
+﻿// Copyright (c) Microsoft Technologies, Inc.  All rights reserved. 
 // Licensed under the Apache License, Version 2.0.  
 // See License.txt in the project root for license information.
 using System;
@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Management.Automation;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 
 namespace CompatCheckAndMigrate.Helpers
 {
@@ -19,6 +20,7 @@ namespace CompatCheckAndMigrate.Helpers
         public string Username { get; set; }
         public string Password { get; set; }
         public string SystemDriveLetter { get; set; }
+        public bool Error { get; set; }
         private static Regex DriveReplacementRegex = new Regex(@"^[a-zA-Z]{1,1}:", RegexOptions.IgnoreCase);
         private string _remoteAppHostConfigPath;
         private string _remoteMetabasePath;
@@ -28,6 +30,11 @@ namespace CompatCheckAndMigrate.Helpers
         public RemoteSystemInfo(string computerName, string username, string password, string driveLetter)
         {
             this.ComputerName = computerName;
+            if (this.ComputerName == RemoteSystemInfo.LocalhostName)
+            {
+                return;
+            }
+
             this.Username = username;
             this.Password = password;
             this.SystemDriveLetter = driveLetter;
@@ -42,7 +49,10 @@ namespace CompatCheckAndMigrate.Helpers
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception("Unable to copy applicationhost.config", ex);
+                    string message = "Unable to copy applicationhost.config\n";
+                    message += ex.Message;
+                    MessageBox.Show(message, System.Windows.Forms.Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    this.Error = true;
                 }
                 this.IISVersion = 7;
                 this.OSVersion = "6.1";
@@ -56,16 +66,24 @@ namespace CompatCheckAndMigrate.Helpers
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception("Unable to copy metabase.xml", ex);
+                    string message = "Unable to copy metabase.xml\n";
+                    message += ex.Message;
+                    MessageBox.Show(message, System.Windows.Forms.Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    this.Error = true;
                 }
+
                 this.IISVersion = 6;
                 this.OSVersion = "5.2";
             }
             else
             {
-                throw new Exception("IIS is not installed on the remote system");
+                string message = "IIS is not installed on the remote system";
+                MessageBox.Show(message, System.Windows.Forms.Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                this.Error = true;
             }
         }
+
+        public static string LocalhostName = "localhost";
 
         private RemoteSystemInfo()
         {

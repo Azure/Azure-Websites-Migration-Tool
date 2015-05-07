@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved. 
+﻿// Copyright (c) Microsoft Technologies, Inc.  All rights reserved. 
 // Licensed under the Apache License, Version 2.0.  
 // See License.txt in the project root for license information.
 
@@ -76,16 +76,21 @@ namespace CompatCheckAndMigrate.Helpers
             set { this._appPools = value; }
         }
 
-        public void SetPublishSetting(Dictionary<string,string> siteErrorInfo, string publishSettingsFilePath)
+        public void SetPublishSetting(Dictionary<string, string> siteErrorInfo, string publishSettingsFilePath, string serverName)
         {
             foreach (var site in this.Sites)
             {
-                var publishSetting = new PublishSettings(publishSettingsFilePath, site.SiteName);
+                var publishSetting = new PublishSettings(publishSettingsFilePath, site.SiteName, serverName);
+                if (!publishSetting.Initialized)
+                {
+                    publishSetting = new PublishSettings(publishSettingsFilePath, site.SiteName);
+                }
+
                 if (publishSetting.Initialized)
                 {
                     site.PublishProfile = publishSetting;
                     string siteError;
-                    if (siteErrorInfo.TryGetValue(site.PublishProfile.SiteName, out siteError))
+                    if (siteErrorInfo != null && siteErrorInfo.TryGetValue(site.PublishProfile.SiteName, out siteError))
                     {
                         site.SiteCreationError = siteError;
                     }

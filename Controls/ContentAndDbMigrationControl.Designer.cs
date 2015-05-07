@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved. 
+﻿// Copyright (c) Microsoft Technologies, Inc.  All rights reserved. 
 // Licensed under the Apache License, Version 2.0.  
 // See License.txt in the project root for license information.
 
@@ -126,6 +126,7 @@ namespace CompatCheckAndMigrate.Controls
             this.statusPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.statusPanel.AutoScroll = true;
             this.statusPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.statusPanel.Location = new System.Drawing.Point(34, 68);
             this.statusPanel.Name = "statusPanel";

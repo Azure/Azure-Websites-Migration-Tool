@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved. 
+﻿// Copyright (c) Microsoft Technologies, Inc.  All rights reserved. 
 // Licensed under the Apache License, Version 2.0.  
 // See License.txt in the project root for license information.
 
@@ -47,7 +47,9 @@ namespace CompatCheckAndMigrate.Helpers
         internal string ContentTraceFile { get; set; }
         internal string DbTraceFile { get; set; }
 
-        public PublishSettings(string filePathOrXml, string siteName)
+        public PublishSettings(string filePathOrXml, string siteName): this(filePathOrXml, siteName, null) {}
+
+        public PublishSettings(string filePathOrXml, string siteName, string serverName)
         {
             _sqlDbConnectionString = new SqlConnectionStringBuilder();
             ParseErrors = new StringBuilder();
@@ -74,7 +76,14 @@ namespace CompatCheckAndMigrate.Helpers
 
             if (docLoadedSuccessfully)
             {
-                Load(doc.CreateNavigator(), siteName);
+                if (serverName != null)
+                {
+                    this.Load(doc.CreateNavigator(), serverName + ":" + siteName);
+                }
+                else
+                {
+                    this.Load(doc.CreateNavigator(), siteName);
+                }
             }
         }
 

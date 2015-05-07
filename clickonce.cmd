@@ -7,10 +7,10 @@ REM Use ClickOnce to Deploy Applications That Can Run on Multiple Versions of th
 REM http://msdn.microsoft.com/en-us/library/ee517334.aspx
 
 set Update=0
-set Version=1.4.0.0
+set Version=1.5.0.0
 set Name=CompatCheckAndMigrate
 set Product=Azure Websites Migration Assistant
-set Publisher="MS Open Tech"
+set Publisher="Microsoft"
 set PublishingLocation=https://www.movemetothecloud.net
 set SupportURL=https://www.movemetothecloud.net
 set Tools="C:\Program Files (x86)\Microsoft SDKs\Windows\v8.0A\bin\NETFX 4.0 Tools"
@@ -73,7 +73,8 @@ echo 8. Sign .application file
 if "%Update%"=="0" (	
 	%Mage% -Sign "%Name%.application" -CertFile %CertPath%
 ) else (
-	%Mage% -Update "%Name%.application" -AppManifest "%Name%\%Version%\%Name%.exe.manifest" -CertFile %CertPath% -Version %Version% -Publisher %Publisher%
+rem #  -CertFile %CertPath%
+	%Mage% -Update "%Name%.application" -AppManifest "%Name%\%Version%\%Name%.exe.manifest" -Version %Version% -Publisher %Publisher%
 )
 
 echo 9. Copy .application file to version folder (optionally)
