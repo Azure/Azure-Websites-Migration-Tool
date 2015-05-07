@@ -22,6 +22,7 @@ namespace CompatCheckAndMigrate.Helpers
         private const int Interval = 30 * 1000; // 30 seconds
         private Queue<PublishOperation> _pendingPublishOperations;
         private Queue<PublishOperation> _completedOperations;
+        private object _completedOperationsLock = new object();
         private int _totalOperations;
 
         private Thread _controllerThread;
@@ -108,11 +109,11 @@ namespace CompatCheckAndMigrate.Helpers
 
             try
             {
-                MainForm.WriteTrace("Starting calculation for: {0} in Thread {1}", operation.LocalSite.SiteName, Thread.CurrentThread.ManagedThreadId);
+                operation.LogTrace("Starting calculation for: {0} in Thread {1}", operation.LocalSite.SiteName, Thread.CurrentThread.ManagedThreadId);
                 if (operation.Publish(true))
                 {
                     // set size succeeded. The source and destination are valid. Start actual sync
-                    MainForm.WriteTrace("Starting actual publish for: {0} in Thread {1}", operation.LocalSite.SiteName, Thread.CurrentThread.ManagedThreadId);
+                    operation.LogTrace("Starting actual publish for: {0} in Thread {1}", operation.LocalSite.SiteName, Thread.CurrentThread.ManagedThreadId);
                     operation.Publish(false);
                 }
             }
@@ -122,9 +123,9 @@ namespace CompatCheckAndMigrate.Helpers
             }
             finally
             {
-                lock (_completedOperations)
+                lock (this._completedOperationsLock)
                 {
-                    MainForm.WriteTrace("Enqueueing completed operation for: {0} in Thread {1}", operation.LocalSite.SiteName, Thread.CurrentThread.ManagedThreadId);
+                    operation.LogTrace("Enqueueing completed operation for: {0} in Thread {1}", operation.LocalSite.SiteName, Thread.CurrentThread.ManagedThreadId);
                     _completedOperations.Enqueue(operation);
                 }
             }

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved. 
+﻿// Copyright (c) Microsoft Technologies, Inc.  All rights reserved. 
 // Licensed under the Apache License, Version 2.0.  
 // See License.txt in the project root for license information.
 
@@ -127,8 +127,14 @@ namespace CompatCheckAndMigrate.Controls
                 {
                     foreach (RemoteSystemInfo remoteSystemInfo in RemoteSystemInfos.Servers.Values)
                     {
-                        // Do actual work here.
-                        readers.Add(Helper.GetIISInfoReader(Helper.AzureMigrationId, remoteSystemInfo));
+                        if (remoteSystemInfo.ComputerName == "localhost")
+                        {
+                            readers.Add(Helper.GetIISInfoReader(Helper.AzureMigrationId, null));
+                        }
+                        else
+                        {
+                            readers.Add(Helper.GetIISInfoReader(Helper.AzureMigrationId, remoteSystemInfo));
+                        }
                     }
                 }
                 else
@@ -151,7 +157,7 @@ namespace CompatCheckAndMigrate.Controls
 
                     if (runWorkerCompletedEventArgs.Result == null)
                     {
-                        Helper.ShowErrorMessageAndExit("IIS Configuration could not be read. Please re run the tool");
+                        Helper.ShowErrorMessageAndExit("IIS Configuration could not be read. Please re-run the tool");
                     }
 
                     // this.websitesCheckedListBox.Items.Clear();

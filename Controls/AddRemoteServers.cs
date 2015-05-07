@@ -23,6 +23,7 @@ namespace CompatCheckAndMigrate.Controls
 
         public void SetState(object state, bool isNavigatingBack = false)
         {
+            tbxComputerName.Enabled = tbxPassword.Enabled = tbxUsername.Enabled = cbxDrive.Enabled = false;
             this.tbxUsername.Items.Clear();
             if (state != null && (bool) state)
             {
@@ -35,18 +36,17 @@ namespace CompatCheckAndMigrate.Controls
 
             MainForm.WriteTrace("in set state remote");
             cbxDrive.SelectedIndex = 0;
-            // select local by default
-            tbxComputerName.Enabled = tbxPassword.Enabled = tbxUsername.Enabled = cbxDrive.Enabled = true;
-
             if (this.useScom)
             {
-                RemoteSystemInfos.Servers = new Dictionary<string, RemoteSystemInfo>();
+                // RemoteSystemInfos.Servers = new Dictionary<string, RemoteSystemInfo>();
                 this.busyMessageLabel.Text = "Reading servers from SCOM";
                 this.busyMessageLabel.Visible = this.busyPictureBox.Visible = true;
                 AddScomServers();
             }
             else
             {
+                // select local by default
+                tbxComputerName.Enabled = tbxPassword.Enabled = tbxUsername.Enabled = cbxDrive.Enabled = true;
                 this.busyMessageLabel.Visible = this.busyPictureBox.Visible = false;
             }
         }
@@ -78,7 +78,6 @@ namespace CompatCheckAndMigrate.Controls
 
         private void AddScomServers()
         {
-            //Runspace runspace = RunspaceFactory.CreateRunspace();
             _worker = new BackgroundWorker();
             btnConnect.Enabled = false;
             _worker.DoWork += (object doWorkSender, DoWorkEventArgs doWorkEventArgs) =>
@@ -91,8 +90,8 @@ namespace CompatCheckAndMigrate.Controls
                 this.scomCompleted = true;
                 // Hide loading gif.
                 this.busyMessageLabel.Visible = this.busyPictureBox.Visible = false;
-                tbxComputerName.Enabled = tbxUsername.Enabled = tbxPassword.Enabled = cbxDrive.Enabled = true;
                 btnConnect.Enabled = true;
+                tbxComputerName.Enabled = tbxPassword.Enabled = tbxUsername.Enabled = cbxDrive.Enabled = true;
                 if (runWorkerCompletedEventArgs.Error != null)// || !connectionSuccessful)
                 {
                     string message = runWorkerCompletedEventArgs.Error != null ? runWorkerCompletedEventArgs.Error.Message : "Could not connect to the computer specified with the credentials supplied";
@@ -115,11 +114,19 @@ namespace CompatCheckAndMigrate.Controls
                 foreach (var computerName in result)
                 {
                     string key = this.CredentialsRequiredPrefix + computerName;
-                    if (!RemoteSystemInfos.Servers.ContainsKey(computerName.ToString()) && !this.serverList.Items.Contains(key))
+                    if (!RemoteSystemInfos.Servers.ContainsKey(computerName.ToString()) && 
+                        !this.serverList.Items.Contains(key) && !this.serverList.Items.Contains(computerName.ToString()))
                     {
                         this.serverList.Items.Add(key);
                         RemoteSystemInfos.AddOrUpdateEmptyServer(key, computerName.ToString());
                     }
+                }
+
+                // add localhost
+                if (!RemoteSystemInfos.Servers.ContainsKey(RemoteSystemInfo.LocalhostName) && !this.serverList.Items.Contains(RemoteSystemInfo.LocalhostName))
+                {
+                    this.serverList.Items.Add(RemoteSystemInfo.LocalhostName);
+                    RemoteSystemInfos.AddOrUpdate(RemoteSystemInfo.LocalhostName, string.Empty, string.Empty, string.Empty);
                 }
             };
 
@@ -174,84 +181,111 @@ namespace CompatCheckAndMigrate.Controls
         AutoCompleteStringCollection autoCompleteStringCollection = new AutoCompleteStringCollection();
         private void addServerButton_Click(object sender, EventArgs e)
         {
-            string computerName = tbxComputerName.Text;
-            if (computerName == null)
+            var selectedItems = this.serverList.SelectedItems;
+            List<string> computerNames = new List<string>();
+            if (selectedItems != null && selectedItems.Count > 1)
             {
-                return;
-            }
-
-            if (RemoteSystemInfos.Servers.ContainsKey(computerName))
-            {
-                MessageBox.Show(string.Format("Server already added: {0}\nDelete to re-add", computerName));
-                return;
-            }
-
-            if (RemoteSystemInfos.EmptyServers.ContainsKey(this.CredentialsRequiredPrefix + computerName))
-            {
-                RemoteSystemInfos.EmptyServers.Remove(this.CredentialsRequiredPrefix + computerName);
-                this.serverList.Items.Remove(this.CredentialsRequiredPrefix + computerName);
-            }
-
-            string username = tbxUsername.Text;
-            string password = tbxPassword.Text;
-            string driveLetter = cbxDrive.Text;
-
-            busyMessageLabel.Text = "Trying to connect to " + computerName;
-            busyMessageLabel.Visible = busyPictureBox.Visible = true;
-            tbxComputerName.Enabled = tbxUsername.Enabled = tbxPassword.Enabled = cbxDrive.Enabled = false;
-            _worker = new BackgroundWorker();
-            btnConnect.Enabled = false;
-
-            _worker.DoWork += (object doWorkSender, DoWorkEventArgs doWorkEventArgs) =>
-            {
-                if (!string.IsNullOrEmpty(computerName) && Helper.IsComputerReachable(computerName))
+                foreach (var selectedItemO in selectedItems)
                 {
-                    doWorkEventArgs.Result = Helper.ConnectToServer(computerName, username, password);
+                    string selectedItem = (string)selectedItemO;
+                    if (selectedItem.StartsWith(this.CredentialsRequiredPrefix))
+                    {
+                        selectedItem = selectedItem.Replace(this.CredentialsRequiredPrefix, string.Empty);
+                    }
+
+                    computerNames.Add(selectedItem);
                 }
-            };
-
-            _worker.RunWorkerCompleted += (object runWorkerCompletedSender, RunWorkerCompletedEventArgs runWorkerCompletedEventArgs) =>
+            }
+            else
             {
-                // Hide busy animation.
-                this.busyPictureBox.Visible = this.busyMessageLabel.Visible = false;
-                tbxComputerName.Enabled = tbxUsername.Enabled = tbxPassword.Enabled = cbxDrive.Enabled = true;
-                btnConnect.Enabled = true;
-                if (runWorkerCompletedEventArgs.Error != null)// || !connectionSuccessful)
+                string computerName = tbxComputerName.Text;
+                if (computerName == null)
                 {
-                    string message = runWorkerCompletedEventArgs.Error != null ? runWorkerCompletedEventArgs.Error.Message : "Could not connect to the computer specified with the credentials supplied";
-                    MessageBox.Show(message, System.Windows.Forms.Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
-
                     return;
                 }
 
-                bool result = runWorkerCompletedEventArgs.Result != null && (bool) runWorkerCompletedEventArgs.Result;
-                if (!result)
-                {
-                    MessageBox.Show("Unable to connect to server", System.Windows.Forms.Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                computerNames.Add(computerName);
+            }
 
+            foreach (var computerName in computerNames)
+            {
+                if (RemoteSystemInfos.Servers.ContainsKey(computerName))
+                {
+                    MessageBox.Show(string.Format("Server already added: {0}\nDelete to re-add", computerName));
                     return;
                 }
-                
-                this.tbxUsername.Items.Add(username);
-                autoCompleteStringCollection.Add(username);
-                this.tbxUsername.AutoCompleteCustomSource = autoCompleteStringCollection;
-                RemoteSystemInfos.AddOrUpdate(computerName, username, password, driveLetter);
 
-                var remoteSystemInfo = RemoteSystemInfos.Servers[computerName];
-                if (remoteSystemInfo.IISVersion >= 7 && Helper.IisVersion < 7)
-                {
-                    MessageBox.Show(
-                        "To migrate sites on a web server 7 and higher, run the tool from a system running Vista or above. ",
-                        System.Windows.Forms.Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    RemoteSystemInfos.Servers.Remove(computerName);
-                }
-                else
-                {
-                    this.serverList.Items.Add(computerName);
-                }
-            };
+                string username = tbxUsername.Text;
+                string password = tbxPassword.Text;
+                string driveLetter = cbxDrive.Text;
 
-            _worker.RunWorkerAsync();
+                busyMessageLabel.Text = "Trying to connect to " + computerName;
+                busyMessageLabel.Visible = busyPictureBox.Visible = true;
+                tbxComputerName.Enabled = tbxUsername.Enabled = tbxPassword.Enabled = cbxDrive.Enabled = false;
+                _worker = new BackgroundWorker();
+                btnConnect.Enabled = false;
+
+                _worker.DoWork += (object doWorkSender, DoWorkEventArgs doWorkEventArgs) =>
+                {
+                    if (!string.IsNullOrEmpty(computerName) && Helper.IsComputerReachable(computerName))
+                    {
+                        doWorkEventArgs.Result = Helper.ConnectToServer(computerName, username, password);
+                    }
+                };
+
+                _worker.RunWorkerCompleted += (object runWorkerCompletedSender, RunWorkerCompletedEventArgs runWorkerCompletedEventArgs) =>
+                {
+                    // Hide busy animation.
+                    this.busyPictureBox.Visible = this.busyMessageLabel.Visible = false;
+                    tbxComputerName.Enabled = tbxUsername.Enabled = tbxPassword.Enabled = cbxDrive.Enabled = true;
+                    btnConnect.Enabled = true;
+                    if (runWorkerCompletedEventArgs.Error != null)// || !connectionSuccessful)
+                    {
+                        string message = runWorkerCompletedEventArgs.Error != null ? runWorkerCompletedEventArgs.Error.Message : "Could not connect to the computer specified with the credentials supplied";
+                        MessageBox.Show(message, System.Windows.Forms.Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                        return;
+                    }
+
+                    bool result = runWorkerCompletedEventArgs.Result != null && (bool)runWorkerCompletedEventArgs.Result;
+                    if (!result)
+                    {
+                        MessageBox.Show("Unable to connect to server", System.Windows.Forms.Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                        return;
+                    }
+
+                    this.tbxUsername.Items.Add(username);
+                    autoCompleteStringCollection.Add(username);
+                    this.tbxUsername.AutoCompleteCustomSource = autoCompleteStringCollection;
+                    RemoteSystemInfos.AddOrUpdate(computerName, username, password, driveLetter);
+
+                    var remoteSystemInfo = RemoteSystemInfos.Servers[computerName];
+                    if (remoteSystemInfo.IISVersion >= 7 && Helper.IisVersion < 7)
+                    {
+                        MessageBox.Show(
+                            "To migrate sites on a web server 7 and higher, run the tool from a system running Vista or above. ",
+                            System.Windows.Forms.Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        RemoteSystemInfos.Servers.Remove(computerName);
+                    }
+                    else if (remoteSystemInfo.Error)
+                    {
+                        RemoteSystemInfos.Servers.Remove(computerName);
+                    }
+                    else
+                    {
+                        this.serverList.Items.Add(computerName);
+                    }
+
+                    if (!remoteSystemInfo.Error && RemoteSystemInfos.EmptyServers.ContainsKey(this.CredentialsRequiredPrefix + computerName))
+                    {
+                        RemoteSystemInfos.EmptyServers.Remove(this.CredentialsRequiredPrefix + computerName);
+                        this.serverList.Items.Remove(this.CredentialsRequiredPrefix + computerName);
+                    }
+                };
+
+                _worker.RunWorkerAsync();
+            }
         }
 
         private void serverList_SelectedIndexChanged(object sender, EventArgs e)
@@ -284,26 +318,35 @@ namespace CompatCheckAndMigrate.Controls
 
         private void removeServerButton_Click(object sender, EventArgs e)
         {
-            string selectedItem = (string) this.serverList.SelectedItem;
-            if (selectedItem == null)
+            var selectedItems = new List<string>();
+            foreach (var item in this.serverList.SelectedItems)
             {
-                return;
+                selectedItems.Add((string) item);
             }
 
-            if (RemoteSystemInfos.EmptyServers.ContainsKey(selectedItem))
+            foreach (var selectedItemObject in selectedItems)
             {
-                RemoteSystemInfos.EmptyServers.Remove(selectedItem);
-            }
+                string selectedItem = (string)selectedItemObject;
+                if (selectedItem == null)
+                {
+                    continue;
+                }
 
-            RemoteSystemInfo remoteSystemInfo = null;
-            RemoteSystemInfos.Servers.TryGetValue(selectedItem, out remoteSystemInfo);
-            if (remoteSystemInfo != null)
-            {
-                RemoteSystemInfos.Servers.Remove(remoteSystemInfo.ComputerName);
-                this.autoCompleteStringCollection.Remove(remoteSystemInfo.Username);
-            }
+                if (RemoteSystemInfos.EmptyServers.ContainsKey(selectedItem))
+                {
+                    RemoteSystemInfos.EmptyServers.Remove(selectedItem);
+                }
 
-            this.serverList.Items.Remove(selectedItem);
+                RemoteSystemInfo remoteSystemInfo = null;
+                RemoteSystemInfos.Servers.TryGetValue(selectedItem, out remoteSystemInfo);
+                if (remoteSystemInfo != null)
+                {
+                    RemoteSystemInfos.Servers.Remove(remoteSystemInfo.ComputerName);
+                    this.autoCompleteStringCollection.Remove(remoteSystemInfo.Username);
+                }
+
+                this.serverList.Items.Remove(selectedItem);
+            }
         }
 
         private void btnBack_Click(object sender, EventArgs e)

@@ -2,8 +2,6 @@
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{D7A92F7E-5BC9-44C1-A4B5-A2FE32CFC405}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -30,11 +28,11 @@
     <InstallUrl>http://www.azuremigration.com/</InstallUrl>
     <SupportUrl>http://www.azuremigration.com</SupportUrl>
     <ProductName>Azure Websites Migration Assistant</ProductName>
-    <PublisherName>MS Open Tech</PublisherName>
+    <PublisherName>Microsoft</PublisherName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>clickonce.htm</WebPage>
-    <ApplicationRevision>12</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.5.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -45,7 +43,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -54,7 +52,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -71,9 +69,6 @@
   <PropertyGroup>
     <SignManifests>true</SignManifests>
   </PropertyGroup>
-  <PropertyGroup />
-  <PropertyGroup />
-  <PropertyGroup />
   <PropertyGroup>
     <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
@@ -136,6 +131,12 @@
     </Compile>
     <Compile Include="Controls\AddRemoteServers.Designer.cs">
       <DependentUpon>AddRemoteServers.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\PickPublishSettingsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\PickPublishSettingsControl.Designer.cs">
+      <DependentUpon>PickPublishSettingsControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\InstallerControl.cs">
       <SubType>UserControl</SubType>
@@ -245,12 +246,16 @@
     </Compile>
     <EmbeddedResource Include="Controls\ConfirmationControl.resx">
       <DependentUpon>ConfirmationControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\ContentAndDbMigrationControl.resx">
       <DependentUpon>ContentAndDbMigrationControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\AddRemoteServers.resx">
       <DependentUpon>AddRemoteServers.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\PickPublishSettingsControl.resx">
+      <DependentUpon>PickPublishSettingsControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\InstallerControl.resx">
       <DependentUpon>InstallerControl.cs</DependentUpon>

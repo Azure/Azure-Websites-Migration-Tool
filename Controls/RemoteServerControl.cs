@@ -45,6 +45,10 @@ namespace CompatCheckAndMigrate.Controls
             {
                 FireGoToEvent(WizardSteps.AddRemoteServers, true);
             }
+            //else if (radioPublishSettings.Checked)
+            //{
+            //    FireGoToEvent(WizardSteps.SiteStep, null);
+            //}
             else
             {
                 // use the local server info

@@ -245,6 +245,7 @@
             this.serverList.FormattingEnabled = true;
             this.serverList.Location = new System.Drawing.Point(0, 37);
             this.serverList.Name = "serverList";
+            this.serverList.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.serverList.Size = new System.Drawing.Size(236, 396);
             this.serverList.TabIndex = 16;
             this.serverList.SelectedIndexChanged += new System.EventHandler(this.serverList_SelectedIndexChanged);
@@ -274,7 +275,7 @@
             // 
             // panel3
             // 
-            this.panel3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.panel3.BackColor = System.Drawing.Color.Transparent;
             this.panel3.Controls.Add(this.busyMessageLabel);
             this.panel3.Controls.Add(this.busyPictureBox);

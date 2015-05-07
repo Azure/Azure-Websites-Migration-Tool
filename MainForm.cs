@@ -1,7 +1,8 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved. 
+﻿// Copyright (c) Microsoft Technologies, Inc.  All rights reserved. 
 // Licensed under the Apache License, Version 2.0.  
 // See License.txt in the project root for license information.
 
+using System;
 using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
@@ -34,6 +35,7 @@ namespace CompatCheckAndMigrate
             {WizardSteps.SiteNotMigrated, new SiteStatusControl()},
             {WizardSteps.RemoteComputerInfo, new RemoteServerControl()},
             {WizardSteps.AddRemoteServers, new AddRemoteServers()},
+            {WizardSteps.PickPublishSettings, new PickPublishSettingsControl()},
         };
 
         private void InitializeTrace()
@@ -64,7 +66,8 @@ namespace CompatCheckAndMigrate
             catch
             {
             }
-            Trace.WriteLine(message);
+            
+            Trace.WriteLine(DateTime.Now + " : " + message);
         }
 
         private static void CheckAndSetBrowserEmulation()

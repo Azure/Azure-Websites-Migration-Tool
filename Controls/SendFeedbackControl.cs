@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved. 
+﻿// Copyright (c) Microsoft Technologies, Inc.  All rights reserved. 
 // Licensed under the Apache License, Version 2.0.  
 // See License.txt in the project root for license information.
 
@@ -14,7 +14,7 @@ namespace CompatCheckAndMigrate.Controls
 {
     public partial class SendFeedbackControl : UserControl, IWizardStep
     {
-        public IISServer Server { get; private set; }
+        private IISServers IISServers;
         private const int MaxBufferLength = 8000;
         private StringBuilder ErrorBuffer;
 
@@ -31,7 +31,7 @@ namespace CompatCheckAndMigrate.Controls
             busyPictureBox.Visible = true;
             if (state != null)
             {
-                this.Server = (IISServer)state;
+                this.IISServers = (IISServers)state;
             }
 
             long builderLength = 0;
@@ -40,36 +40,42 @@ namespace CompatCheckAndMigrate.Controls
                 ErrorBuffer.Remove(0, ErrorBuffer.Length);
             }
 
-            foreach(Site website in Server.Sites.Where(s => s.PublishProfile != null && !string.IsNullOrEmpty(s.SiteCreationError)))
+            foreach (var server in this.IISServers.Servers.Values)
             {
-                ErrorBuffer.AppendFormat("Site: {0} creation failed. {1}\r\n", website.SiteName, website.SiteCreationError);
+                foreach (Site website in server.Sites.Where(s => s.PublishProfile != null && !string.IsNullOrEmpty(s.SiteCreationError)))
+                {
+                    ErrorBuffer.AppendFormat("Site: {0} creation failed. {1} (server: {2})\r\n", website.SiteName, website.SiteCreationError, server.Name);
+                }
             }
 
-            foreach (Site website in Server.Sites.Where(s => s.PublishProfile != null && (!s.ContentPublishState || !s.DbPublishState)))
+            foreach (var server in this.IISServers.Servers.Values)
             {
-                if (ErrorBuffer.Length < MaxBufferLength)
+                foreach (Site website in server.Sites.Where(s => s.PublishProfile != null && (!s.ContentPublishState || !s.DbPublishState)))
                 {
-                    string contentTrace = string.Empty;
-                    string dbTrace = string.Empty;
-
-                    if (File.Exists(website.PublishProfile.ContentTraceFile))
+                    if (ErrorBuffer.Length < MaxBufferLength)
                     {
-                        contentTrace = File.ReadAllText(website.PublishProfile.ContentTraceFile).Replace("<", " ").Replace(">", " ");
-                    }
+                        string contentTrace = string.Empty;
+                        string dbTrace = string.Empty;
 
-                    if (builderLength + contentTrace.Length <= MaxBufferLength)
-                    {
-                        ErrorBuffer.AppendLine(contentTrace);
-                    }
+                        if (File.Exists(website.PublishProfile.ContentTraceFile))
+                        {
+                            contentTrace = File.ReadAllText(website.PublishProfile.ContentTraceFile).Replace("<", " ").Replace(">", " ");
+                        }
 
-                    if (File.Exists(website.PublishProfile.DbTraceFile))
-                    {
-                        dbTrace = File.ReadAllText(website.PublishProfile.DbTraceFile).Replace("<", " ").Replace(">", " ");
-                    }
+                        if (builderLength + contentTrace.Length <= MaxBufferLength)
+                        {
+                            ErrorBuffer.AppendLine(contentTrace);
+                        }
 
-                    if (builderLength + dbTrace.Length <= MaxBufferLength)
-                    {
-                        ErrorBuffer.AppendLine(dbTrace);
+                        if (File.Exists(website.PublishProfile.DbTraceFile))
+                        {
+                            dbTrace = File.ReadAllText(website.PublishProfile.DbTraceFile).Replace("<", " ").Replace(">", " ");
+                        }
+
+                        if (builderLength + dbTrace.Length <= MaxBufferLength)
+                        {
+                            ErrorBuffer.AppendLine(dbTrace);
+                        }
                     }
                 }
             }
@@ -141,7 +147,7 @@ namespace CompatCheckAndMigrate.Controls
 
         private void btnBack_Click(object sender, EventArgs e)
         {
-            FireGoToEvent(WizardSteps.ContentAndDbMigration, this.Server, true);
+            FireGoToEvent(WizardSteps.ContentAndDbMigration, this.IISServers, true);
         }
     }
 }

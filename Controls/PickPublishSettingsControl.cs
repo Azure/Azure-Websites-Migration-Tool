@@ -10,9 +10,12 @@ using System.Windows.Forms;
 
 namespace CompatCheckAndMigrate.Controls
 {
-    public partial class SaveReadinessReportControl : UserControl, IWizardStep
+    public partial class PickPublishSettingsControl : UserControl, IWizardStep
     {
-        public SaveReadinessReportControl()
+        private string publishSettings;
+        private IISServers IISServers;
+
+        public PickPublishSettingsControl()
         {
             InitializeComponent();
         }
@@ -21,7 +24,7 @@ namespace CompatCheckAndMigrate.Controls
 
         public void SetState(object state, bool isNavigatingBack = false)
         {
-            this.ReadinessReportContent = (string)state;
+            this.IISServers = (IISServers)state;
         }
 
         public string ReadinessReportContent { get; private set; }
@@ -37,19 +40,20 @@ namespace CompatCheckAndMigrate.Controls
         
         private void SaveReadinessReportControl_Load(object sender, EventArgs e)
         {
-            this.locationTextBox.Text = BuildAzureWebSitesReadinessReportPath(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
+            
         }
 
         private void BrowseButton_Click(object sender, EventArgs e)
         {
-            using (FolderBrowserDialog dialog = new FolderBrowserDialog())
+            using (OpenFileDialog dialog = new OpenFileDialog())
             {
-                dialog.RootFolder = Environment.SpecialFolder.MyComputer;
-                dialog.Description = "Please provide the location to store the readiness report.";
-                dialog.ShowNewFolderButton = true;
+                //dialog.RootFolder = Environment.SpecialFolder.MyComputer;
+                //dialog.Description = "Please provide the location to store the readiness report.";
+                //dialog.ShowNewFolderButton = true;
                 if (dialog.ShowDialog() == DialogResult.OK)
                 {
-                    this.locationTextBox.Text = BuildAzureWebSitesReadinessReportPath(dialog.SelectedPath);
+                    this.locationTextBox.Text = dialog.FileName;
+                    this.publishSettings = dialog.FileName;
                 }
             }
         }
@@ -65,28 +69,39 @@ namespace CompatCheckAndMigrate.Controls
 
                 return;
             }
-
-            File.WriteAllText(path, this.ReadinessReportContent);
+            
             if (File.Exists(path))
             {
                 // just to delay and avoid race condition
             }
-            FireGoToEvent(WizardSteps.Confirmation, path);
-        }
 
-        private static string BuildAzureWebSitesReadinessReportPath(string basePath)
-        {
-            return Path.Combine(basePath, Helper.AzureMigrationId + ".AzureWebSitesReadinessReport");
+            try
+            {
+                this.publishSettings = path;
+
+                foreach (var server in this.IISServers.Servers.Values)
+                {
+                    server.SetPublishSetting(null, this.publishSettings, server.Name);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+
+            var wizardStep = Helper.IsWebDeployInstalled
+                ? WizardSteps.ContentAndDbMigration
+                : WizardSteps.SiteNotMigrated;
+
+            this.Invoke(new MethodInvoker(delegate()
+            {
+                FireGoToEvent(wizardStep, this.IISServers);
+            }));
         }
 
         private void BackButton_Click(object sender, EventArgs e)
         {
             FireGoToEvent(WizardSteps.ReadinessReport);
-        }
-
-        private void locationTextBox_TextChanged(object sender, EventArgs e)
-        {
-
         }
     }
 }
