@@ -1,0 +1,12 @@
+Better web app to do the migration
+Service Endpoint checks
+Authentication checks at application level
+Virtual Directory creation 
+Publish Database UI (don't show status/start publish operation when no databases selected)
+Select/Deselect Database(s) (new UI elements/functionality)
+Finish default doc checking
+
+Exploratory
+================
+1. Check for File IO in the application code
+2. MySql database

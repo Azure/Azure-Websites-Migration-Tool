@@ -15,6 +15,13 @@ namespace CompatCheckAndMigrate.Controls
     public partial class MigrationCandidatesControl : UserControl, IWizardStep
     {
         private BackgroundWorker _worker;
+        internal class SelectedObjects
+        {
+            public List<Site> SelectedSites { get; set; }
+            public List<Database> SelectedDatabases { get; set; }
+            public List<IISServer> SelectedServers { get; set; }
+
+        };
 
         public MigrationCandidatesControl()
         {
@@ -25,7 +32,6 @@ namespace CompatCheckAndMigrate.Controls
 
         public void SetState(object state, bool isNavigatingBack = false)
         {
-            this.Sites = new Dictionary<string, Site>();
             this.IISServers = new IISServers();
             ProcessIISInfo();
         }
@@ -40,65 +46,77 @@ namespace CompatCheckAndMigrate.Controls
         }
 
         public IISServers IISServers = new IISServers();
-        public Dictionary<string, Site> Sites = new Dictionary<string, Site>();
 
         private void GetSelectedSites()
         {
-            if (this.siteTree.Nodes.Count == 0)
-            {
+            SelectedObjects selectedObjs = (SelectedObjects)this.siteTree.Tag;
+
+            if ((null == selectedObjs) ||
+                (0 == selectedObjs.SelectedSites.Count())) {
+                //
+                // This shouldn't happen, since the Continue button is only
+                // enabled if there is at least one site.
+                //
                 return;
             }
 
-            List<Site> selectedSites = new List<Site>();
-            this.GetAllSelectedSites(this.siteTree.Nodes[0], selectedSites);
-            var applicationPools = new Dictionary<string, ApplicationPool>();
-            // reset the sites and AppPools for each server
-            foreach (var server in this.IISServers.Servers.Values)
-            {
-                server.Sites = new List<Site>();
-                foreach (var applicationPool in server.AppPools)
-                {
-                    applicationPools.Add(server.Name + applicationPool.Name, applicationPool);
+            Dictionary<IISServer, List<ApplicationPool>> allAppPools = new Dictionary<IISServer, List<ApplicationPool>>();
+
+            // Clear the list of servers
+            this.IISServers.Servers.Clear();
+
+            foreach (IISServer selectedServer in selectedObjs.SelectedServers) {
+                // first clear any sites the server has.
+                selectedServer.Sites.Clear();
+
+                // save the list of AppPools and reset the server's list.
+                allAppPools.Add(selectedServer, selectedServer.AppPools);
+                selectedServer.AppPools = new List<ApplicationPool>();
+
+                // add this server back into the global list.
+                this.IISServers.Servers.Add(selectedServer.Name, selectedServer);
+            }
+
+            foreach (Site selectedSite in selectedObjs.SelectedSites) {
+                // first clear any databases the site has
+                selectedSite.Databases.Clear();
+                IISServer server = selectedSite.ParentServer;
+                selectedSite.ParentServer = null; //prevent recursion during serialization
+
+                // add this site back into its server's site collection.
+                server.Sites.Add(selectedSite);
+
+                // add app pools for this site back into the server's AppPool collection.
+                List<ApplicationPool> appPools = allAppPools[server];
+                if ((null==appPools) || (0 == appPools.Count)) { continue; }
+
+                ApplicationPool ap = null;
+                if (!server.AppPools.Exists(x => x.Name == selectedSite.AppPoolName)) {
+                    ap = appPools.Find(x => x.Name == selectedSite.AppPoolName);
+                    if (null != ap) {
+                        server.AppPools.Add(ap);
+                        appPools.Remove(ap); // trim the list 
+                    }
                 }
 
-                server.AppPools = new List<ApplicationPool>();
+                foreach (Helpers.Application app in selectedSite.Applications) {
+                    if (!server.AppPools.Exists(x => x.Name == app.AppPoolName)) {
+                        ap = appPools.Find(x => x.Name == app.AppPoolName);
+                        if (null != ap) {
+                            server.AppPools.Add(ap);
+                            appPools.Remove(ap); // trim the list 
+                            if (0 == appPools.Count) { break; }
+                        }
+                    }
+                }       
             }
 
-            // only add the selectedSites and AppPools
-            foreach (var selectedSite in selectedSites)
-            {
-                this.IISServers.Servers[selectedSite.ServerName].Sites.Add(selectedSite);
-                // add site AppPool
-                this.AddApplicationPool(applicationPools[selectedSite.ServerName + selectedSite.AppPoolName], selectedSite.ServerName);
-                foreach (var application in selectedSite.Applications)
-                {
-                    // Add AppPool for each application
-                    this.AddApplicationPool(applicationPools[selectedSite.ServerName + application.AppPoolName], selectedSite.ServerName);
-                }
-            }
-        }
-
-        private void AddApplicationPool(ApplicationPool applicationPoolToAdd, string serverName)
-        {
-            if (!this.IISServers.Servers[serverName].AppPools.Contains(applicationPoolToAdd))
-            {
-                this.IISServers.Servers[serverName].AppPools.Add(applicationPoolToAdd);
-            }
-        }
-
-        private void GetAllSelectedSites(TreeNode treeNode, List<Site> sites)
-        {
-            if (treeNode.Nodes.Count == 0 && treeNode.Checked)
-            {
-                // checked site node
-                sites.Add(this.Sites[treeNode.Name]);
-            }
-            else
-            {
-                foreach (TreeNode node in treeNode.Nodes)
-                {
-                    this.GetAllSelectedSites(node, sites);
-                }
+            foreach (Database selectedDatabase in selectedObjs.SelectedDatabases) {
+                // add any databases back to their respective sites.
+                Site site = selectedDatabase.ParentSite;
+                selectedDatabase.ParentSite = null; //prevent recursion during serialization
+                site.Add(selectedDatabase);
+                
             }
         }
 
@@ -160,11 +178,19 @@ namespace CompatCheckAndMigrate.Controls
                         Helper.ShowErrorMessageAndExit("IIS Configuration could not be read. Please re-run the tool");
                     }
 
-                    // this.websitesCheckedListBox.Items.Clear();
+                    
                     this.siteTree.Nodes.Clear();
                     this.siteTree.CheckBoxes = true;
+
+                    this.siteTree.Tag = new SelectedObjects()
+                    {
+                        SelectedSites = new List<Site>(),
+                        SelectedDatabases = new List<Database>(),
+                        SelectedServers = new List<IISServer>()
+                    };
+                    
                     var rootNode = this.siteTree.Nodes.Add("Root", "Migration Candidates", 0, 0);
-                    rootNode.Checked = true;
+
                     // Get result from the async task.
                     List<IISInfoReader> readers = (List<IISInfoReader>) runWorkerCompletedEventArgs.Result;
 
@@ -179,20 +205,41 @@ namespace CompatCheckAndMigrate.Controls
                                 this.IISServers.Servers.Add(reader.Server.Name, reader.Server);
                             }
 
-                            var serverNode = rootNode.Nodes.Add("Server", string.Format("Web Server: {0}", reader.Server.Name), 7, 7);
-                            serverNode.Checked = true;
+                            var serverNode = rootNode.Nodes.Add("Server", 
+                                                                string.Format("Web Server: {0}", 
+                                                                reader.Server.Name), 
+                                                                7, 
+                                                                7);
+                            serverNode.Tag = reader.Server;
+
                             // Display candidate web sites
                             foreach (Site site in reader.Server.Sites)
                             {
                                 site.ServerName = reader.Server.Name;
+                                site.ParentServer = reader.Server;
                                 // We rely on Site::ToString() to display the name of the site.
-                                // this.websitesCheckedListBox.Items.Add(site, CheckState.Checked);
-                                TreeNode siteNode = serverNode.Nodes.Add(site.ServerName + site.SiteName, site.SiteName, 1, 1);
-                                this.Sites.Add(site.ServerName + site.SiteName, site);
-                                siteNode.Checked = true;
+                                TreeNode siteNode = new TreeNode(site.SiteName, 1, 1)
+                                {
+                                    Tag = site,
+                                    Name = site.ServerName + site.SiteName 
+                                };
+
+                                foreach (Database db in site.Databases) {
+                                    siteNode.Nodes.Add(new TreeNode(db.ToString(), 5, 5) { 
+                                        Tag = db
+                                    });
+                                }
+                                serverNode.Nodes.Add(siteNode);
                             }
                         }
                     }
+
+                    //
+                    // Set the root checked after all of the nodes have been
+                    // added. This will fire the checked event recursively
+                    // for all of the elements in the tree just once.
+                    //
+                    rootNode.Checked = true;
 
                     // Show listbox with results.
                     this.descriptionLabel.Visible = this.StartButton.Visible = this.btnBack.Visible = true; // this.websitesCheckedListBox.Visible = 
@@ -222,48 +269,84 @@ namespace CompatCheckAndMigrate.Controls
             FireGoToEvent(WizardSteps.RemoteComputerInfo, null);
         }
 
-        public List<Site> SelectedSites = new List<Site>();
-
-        private void siteTree_AfterCheck(object sender, TreeViewEventArgs e)
-        {
-            if (e.Node.Nodes.Count > 0)
-            {
-                this.CheckAllChildNodes(e.Node, e.Node.Checked);
+        private void siteTree_AfterCheck(object sender, TreeViewEventArgs e) {
+            TreeNode selectedNode = e.Node;
+            bool nodeChecked = selectedNode.Checked;
+            
+            //
+            // If this node has children, then sync their checked status.
+            //
+            if ((null != selectedNode.Nodes) && (selectedNode.Nodes.Count != 0)) {
+                foreach (TreeNode child in selectedNode.Nodes) {
+                    if (child.Checked != selectedNode.Checked) {
+                        child.Checked = selectedNode.Checked;
+                    }
+                }
             }
 
-            if (this.siteTree.Nodes.Count > 0)
-            {
-                this.StartButton.Enabled = this.AtLeastOneChecked(this.siteTree.Nodes[0]);
+            if ( (selectedNode == this.siteTree.TopNode) || 
+                 ( null == this.siteTree.Tag) ){
+                return;
             }
-            //var site = this.Sites.Values.First();
-            //this.SelectedSites.Add(site);
-        }
 
-        private bool AtLeastOneChecked(TreeNode treeNode)
-        {
-            bool oneChecked = false;
-            foreach (TreeNode node in treeNode.Nodes)
-            {
-                if (node.Checked && node.Nodes.Count == 0)
-                {
-                    return true;
+            SelectedObjects selectedObjs = (SelectedObjects)this.siteTree.Tag;
+            Type objectType = selectedNode.Tag.GetType();
+
+            //
+            // Add or remove selected items from the selected objects list.
+            //
+
+            if (nodeChecked) {
+                //
+                // If this is a child node, and it's been checked, make sure its
+                // parent nodes are checked.
+                //
+                TreeNode nodeParent = selectedNode.Parent;
+                while (null != nodeParent) {
+                    if (!nodeParent.Checked) {
+                        nodeParent.Checked = true;
+                    }
+                    nodeParent = nodeParent.Parent;
                 }
 
-                oneChecked |= this.AtLeastOneChecked(node);
+                if (typeof(Site) == objectType) {
+                    if (!selectedObjs.SelectedSites.Contains((Site)selectedNode.Tag)) {
+                        selectedObjs.SelectedSites.Add((Site)selectedNode.Tag);
+                    }
+                    // It's actually not possible to check (enable) anything 
+                    // in the tree without at least one site being checked.
+                    this.StartButton.Enabled = true;
+                }
+                else if (typeof(Database) == objectType) {
+                    if (!selectedObjs.SelectedDatabases.Contains((Database)selectedNode.Tag)) {
+                        selectedObjs.SelectedDatabases.Add((Database)selectedNode.Tag);
+                    }
+                }
+                else if (typeof(IISServer) == objectType) {
+                    if (!selectedObjs.SelectedServers.Contains((IISServer)selectedNode.Tag)) {
+                        selectedObjs.SelectedServers.Add((IISServer)selectedNode.Tag);
+                    }
+                }
             }
-
-            return oneChecked;
-        }
-
-        private void CheckAllChildNodes(TreeNode treeNode, bool nodeChecked)
-        {
-            foreach (TreeNode node in treeNode.Nodes)
-            {
-                node.Checked = nodeChecked;
-                // If the current node has child nodes, call the
-                // CheckAllChildNodes method recursively.
-                this.CheckAllChildNodes(node, nodeChecked);
+            else {
+                if (typeof(Site) == objectType) {
+                    if (selectedObjs.SelectedSites.Contains((Site)selectedNode.Tag)) {
+                        selectedObjs.SelectedSites.Remove((Site)selectedNode.Tag);
+                    }
+                }
+                else if (typeof(Database) == objectType) {
+                    if (selectedObjs.SelectedDatabases.Contains((Database)selectedNode.Tag)) {
+                        selectedObjs.SelectedDatabases.Remove((Database)selectedNode.Tag);
+                    }
+                }
+                else if (typeof(IISServer) == objectType) {
+                    if (!selectedObjs.SelectedServers.Contains((IISServer)selectedNode.Tag)) {
+                        selectedObjs.SelectedServers.Remove((IISServer)selectedNode.Tag);
+                    }
+                }
+                this.StartButton.Enabled = (0 != selectedObjs.SelectedSites.Count());
             }
+            return;
         }
     }
 }

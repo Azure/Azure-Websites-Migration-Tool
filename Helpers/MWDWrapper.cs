@@ -14,6 +14,7 @@ using System;
 using System.Data.Sql;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Data.Common;
 
 namespace CompatCheckAndMigrate.Helpers
 {
@@ -147,6 +148,21 @@ namespace CompatCheckAndMigrate.Helpers
                 manifest.WriteAttributeString(MigrationConstants.ManifestPath, siteName);
                 manifest.WriteEndElement();
 
+                foreach (var vdir in _localSite.VDirs)
+                {
+                    string vdirPath = isSource ? vdir.Path : GetAppPath(siteName, vdir.Name);
+                    if (!Directory.Exists(vdir.Path))
+                    {
+                        // if directory is missing on the source dont add this to the source manifest and dont add
+                        // to the destination also since sync would fail anyway.
+                        continue;
+                    }
+
+                    manifest.WriteStartElement("contentPath");
+                    manifest.WriteAttributeString(MigrationConstants.ManifestPath, vdirPath);
+                    manifest.WriteEndElement();
+                }
+
                 foreach (var app in _localSite.Applications)
                 {
                     string appPath = isSource ? app.Path : GetAppPath(siteName, app.Name);
@@ -160,7 +176,27 @@ namespace CompatCheckAndMigrate.Helpers
                     manifest.WriteStartElement("contentPath");
                     manifest.WriteAttributeString(MigrationConstants.ManifestPath, appPath);
                     manifest.WriteEndElement();
+
+                    foreach (var vdir in app.VDirs)
+                    {
+                        if (vdir.Path == app.Path)
+                            continue;
+
+                        string vdirPath = isSource ? vdir.Path : GetAppPath(siteName, app.Name.Trim().Trim(SlashChars) + "/" + vdir.Name.Trim().Trim(SlashChars));
+                        if (!Directory.Exists(vdir.Path))
+                        {
+                            // if directory is missing on the source dont add this to the source manifest and dont add
+                            // to the destination also since sync would fail anyway.
+                            continue;
+                        }
+
+                        manifest.WriteStartElement("contentPath");
+                        manifest.WriteAttributeString(MigrationConstants.ManifestPath, vdirPath);
+                        manifest.WriteEndElement();
+                    }
                 }
+
+
 
                 manifest.WriteEndElement();
             }
@@ -378,8 +414,8 @@ namespace CompatCheckAndMigrate.Helpers
                         DeploymentManager.CreateObject(providerOption,
                             sourceBaseOptions))
                     {
-                        this.LogTrace("Starting DB Sync for: {0} using {1}",
-                            _localSite.Databases[0].DbConnectionStringBuilder.InitialCatalog, provider);
+                        LogTrace("Starting DB Sync for: {0} using {1}",
+                            (string)_localSite.Databases[0].DbConnectionStringBuilder["Initial Catalog"], provider);
                         this.LogTrace("Publishing database as: {0}", destBaseOptions.UserName);
 
                         try
@@ -393,8 +429,8 @@ namespace CompatCheckAndMigrate.Helpers
                         {
                             if (logException)
                             {
-                                this.LogTrace("Error syncing db: {0}",
-                                    _localSite.Databases[0].DbConnectionStringBuilder.InitialCatalog);
+                                LogTrace("Error starting publish for db: {0}",
+                                            (string)_localSite.Databases[0].DbConnectionStringBuilder["Initial Catalog"]);
                                 this.LogTrace(ex.ToString());
                             }
 
@@ -407,8 +443,8 @@ namespace CompatCheckAndMigrate.Helpers
             {
                 if (logException)
                 {
-                    LogTrace("Error starting publish for db: {0}",
-                                            _localSite.Databases[0].DbConnectionStringBuilder.InitialCatalog);
+                    LogTrace("Error syncing db: {0}",
+                                    (string)_localSite.Databases[0].DbConnectionStringBuilder["Initial Catalog"]);
                     LogTrace(ex.ToString());
                 }
 
