@@ -56,6 +56,8 @@ namespace CompatCheckAndMigrate.Helpers
             Errors = new List<string>();
         }
 
+        public IISServer ParentServer { get; set; }
+
         internal string PhysicalPath { get; set; }
 
         public string GetGacedAssemblies()
