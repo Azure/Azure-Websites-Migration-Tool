@@ -9,6 +9,9 @@ using System.Configuration;
 using System.Data.Common;
 using System.Data.EntityClient;
 using System.Windows.Forms;
+using System.Data.OleDb;
+using System.Data.Odbc;
+using System.Data.Sql;
 
 namespace CompatCheckAndMigrate.Helpers
 {
@@ -83,7 +86,7 @@ namespace CompatCheckAndMigrate.Helpers
                                 // this is an entity framework connection string, so we can't migrate it.
                                 // We use this to validate later on however
                                 // we assume the site has a normal connection string as well
-                                site.Add(new Database(providerName, name, dbConnectionString));
+                                site.Add(new Database(providerName, name, dbConnectionString) { ParentSite = site });
                                 continue;
                             }
 
@@ -94,12 +97,37 @@ namespace CompatCheckAndMigrate.Helpers
                                 continue;
                             }
 
-                            if (!string.IsNullOrEmpty(remoteComputerName))
+                            try
                             {
-                                builder.DataSource = SetAppropriateServerName(builder.DataSource, remoteComputerName);
-                            }
+                                var dbConn = new DbConnectionStringBuilder { ConnectionString = dbConnectionString };
+                                // dbConn.ConnectionString = dbConnectionString;
+                                if (dbConn.ContainsKey("Provider") && (dbConn["Provider"].ToString() == "SQLOLEDB" || dbConn["Provider"].ToString().Contains("SQLNCLI")))
+                                {
+                                    dbConn.Remove("Provider");
+                                }
 
-                            site.Add(new Database(providerName, name, builder.ConnectionString));
+                                var sqlConn = new SqlConnectionStringBuilder(dbConn.ConnectionString);
+
+
+                                //sqlConn.ConnectionString = dbConnectionString;
+
+                                if (!string.IsNullOrEmpty(sqlConn.AttachDBFilename) && name == "LocalSqlServer")
+                                {
+                                    // we ignore this since it is MOST LIKELY the default values from the machine.config connection string from .NET framework
+                                    continue;
+                                }
+
+                                if (!string.IsNullOrEmpty(remoteComputerName))
+                                {
+                                    sqlConn.DataSource = SetAppropriateServerName(sqlConn.DataSource, remoteComputerName);
+                                }
+
+                                site.Add(new Database(providerName, name, sqlConn.ConnectionString) { ParentSite = site });
+                            }
+                            catch (System.ArgumentException e)
+                            {
+                                MessageBox.Show(e.ToString());
+                            }
                         }
                     }
                 }

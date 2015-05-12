@@ -40,6 +40,7 @@ namespace CompatCheckAndMigrate.Helpers
         private const string ElementCollectionClearFormat = "{0}/collection[@clearElement='{1}']";
         private const string ElementCollectionRemoveFormat = "{0}/collection[@removeElement='{1}']";
         private const string RootConfigErrorName = "RootConfig";
+        string tempSections = "";
 
         private static readonly List<string> AuthTypes = new List<string>
         {
@@ -109,6 +110,53 @@ namespace CompatCheckAndMigrate.Helpers
             }
         }
 
+        private static void CheckSessionState(string pathToConfig, IISServer server)
+        {
+            if (string.IsNullOrEmpty(pathToConfig))
+            {
+                return;
+            }
+
+            XmlDocument doc = new XmlDocument();
+            try
+            {
+                doc.Load(pathToConfig);
+                var xmlNodeList =
+                    doc.SelectNodes(
+                        "//*[local-name()='sessionState']");
+                foreach (XmlNode node in xmlNodeList)
+                {
+                    foreach (XmlAttribute attrib in node.Attributes)
+                    {
+                        if (attrib.Name.Equals("mode") && !attrib.Value.Equals("InProc") && !attrib.Value.Equals("Off"))
+                        {
+                            string message = "";
+                            if (attrib.Value.Equals("StateServer"))
+                            {
+                                message = string.Format("Session StateServer is not supported on Azure Web Apps");
+
+                            }
+                            else if (attrib.Value.Equals("SQLServer"))
+                            {
+                                message = string.Format("SQL Server session state needs to be configured separately");
+
+                            }
+                            else
+                            {
+                                message = string.Format("Custom session provider may or may not work on Azure Web Apps");
+
+                            }
+                            server.SchemaCheckErrors.Add(message);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // dont throw. Its ok if we dont get default document list. Let migration continue
+                MessageBox.Show(ex.ToString());
+            }
+        }
         private static List<string> GetDefaultDocuments(string pathToConfig)
         {
             var docList = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
@@ -144,7 +192,10 @@ namespace CompatCheckAndMigrate.Helpers
         private void Initialize(RemoteSystemInfo remoteSystemInfo)
         {
             CheckConfig(Server, remoteSystemInfo);
-            var rootDefaultDocList = GetDefaultDocuments(_appHostConfigPath);
+            var userApphostConfig = Path.Combine(Environment.SystemDirectory,
+                            @"inetsrv\config\applicationhost.config");
+            var rootDefaultDocList = GetDefaultDocuments(userApphostConfig);
+            CheckSessionState(userApphostConfig, Server);
 
             using (ServerManager manager = GetServerManager())
             {
@@ -174,6 +225,10 @@ namespace CompatCheckAndMigrate.Helpers
                     {
                         physicalPath = remoteSystemInfo.GetRemotePath(physicalPath);
                     }
+                    else
+                    {
+                        physicalPath = Environment.ExpandEnvironmentVariables(physicalPath);
+                    }
                     var site = new Site(smSite.Name, smSite.Id);
                     site.PhysicalPath = physicalPath;
                     SetAuthPropertiesForSite(config, ref site);
@@ -183,6 +238,7 @@ namespace CompatCheckAndMigrate.Helpers
                         var webconfig = Path.Combine(physicalPath, "web.config");
                         if (File.Exists(webconfig))
                         {
+                            CheckSessionState(webconfig, Server);
                             var localDefaultDocument = GetDefaultDocuments(webconfig);
                             if (localDefaultDocument.Count > 0)
                             {
@@ -203,6 +259,22 @@ namespace CompatCheckAndMigrate.Helpers
                             site.AppPoolName = application.ApplicationPoolName;
                             var gacAssembly = new GacAssemblyDetector(physicalPath);
                             site.Add(gacAssembly.GetGacedAssemblies());
+
+                            foreach (var vdir in smSite.Applications["/"].VirtualDirectories)
+                            {
+                                if (vdir.Path != "/")
+                                {
+                                    string vdirPhysicalPath = vdir.PhysicalPath;
+
+                                    if (remoteSystemInfo != null)
+                                    {
+                                        vdirPhysicalPath = remoteSystemInfo.GetRemotePath(vdirPhysicalPath);
+                                    }
+
+                                    site.Add(new VirtualDirectory(vdir.Path, vdirPhysicalPath));
+                                }
+                            }
+
                             continue;
                         }
 
@@ -214,9 +286,25 @@ namespace CompatCheckAndMigrate.Helpers
                                 appPhysicalPath = remoteSystemInfo.GetRemotePath(appPhysicalPath);
                             }
 
+                            List<VirtualDirectory> listVdirs = new List<VirtualDirectory>();
+                            foreach (var vdir in application.VirtualDirectories)
+                            {
+                                if (vdir.Path != "/")
+                                {
+                                    string vdirPhysicalPath = vdir.PhysicalPath;
+
+                                    if (remoteSystemInfo != null)
+                                    {
+                                        vdirPhysicalPath = remoteSystemInfo.GetRemotePath(vdirPhysicalPath);
+                                    }
+
+                                    listVdirs.Add(new VirtualDirectory(vdir.Path, vdirPhysicalPath));
+                                }
+                            }
+
                             site.Add(new Application(application.Path, appPhysicalPath)
                             {
-                                AppPoolName = application.ApplicationPoolName
+                                AppPoolName = application.ApplicationPoolName, VDirs = listVdirs
                             });
 
                             if (appPhysicalPath == "/")
@@ -293,7 +381,7 @@ namespace CompatCheckAndMigrate.Helpers
             {
                 if (!antaresConfigSections.Contains(customerSection))
                 {
-                    string message = string.Format("Missing section definition for {0}", customerSection);
+                    string message = string.Format("Section definition not supported for {0}", customerSection);
                     server.SchemaCheckErrors.Add(message);
                 }
 
@@ -321,9 +409,9 @@ namespace CompatCheckAndMigrate.Helpers
                 }
 
                 string attributeSectionPath = string.Format(formatStr, sectionPath, attribute.Name);
-                if (antaresDoc.SelectNodes(attributeSectionPath).Count < 1)
+                if (antaresDoc.SelectNodes(attributeSectionPath).Count < 1 && !attribute.Name.Equals("lockAttributes"))
                 {
-                    string message = string.Format("Missing attribute definition {0} for {1}", attribute.Name, sectionPath);
+                    string message = string.Format("Attribute {0} not supported for {1}", attribute.Name, sectionPath);
                     server.SchemaCheckErrors.Add(message);
                 }
             }

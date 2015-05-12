@@ -14,6 +14,8 @@ namespace CompatCheckAndMigrate.Helpers
         private readonly string _connectionStringName;
         private readonly string _providerName;
         internal string DBConnectionString { get; set; }
+
+        public Site ParentSite { get; set; }
         internal SqlConnectionStringBuilder DbConnectionStringBuilder { get; set; }
 
         public Database(string providerName, string name)
@@ -45,6 +47,10 @@ namespace CompatCheckAndMigrate.Helpers
         public string ConnectionStringName
         {
             get { return _connectionStringName; }
+        }
+        public override string ToString()
+        {
+            return ConnectionStringName;
         }
     }
 }

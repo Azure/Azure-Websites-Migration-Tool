@@ -431,7 +431,8 @@ namespace CompatCheckAndMigrate.Helpers
 
         public static string DatabaseProvider
         {
-            get { return ConfigurationManager.AppSettings["DatabaseProvider"] ?? "dbDacFx"; }
+            // get { return ConfigurationManager.AppSettings["DatabaseProvider"] ?? "dbDacFx"; }
+            get { return ConfigurationManager.AppSettings["DatabaseProvider"] ?? "dbSqlFull"; }
         }
 
         public static string MWDAssembly

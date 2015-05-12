@@ -25,6 +25,7 @@ namespace CompatCheckAndMigrate.Helpers
         private readonly List<Application> _applications;
         private readonly List<Binding> _bindings;
         private readonly List<Database> _databases;
+        private readonly List<VirtualDirectory> _vdirs;
         private readonly string _name;
         private readonly long _siteId;
         private EnabledAuthenticationType _enabledAuthType;
@@ -43,6 +44,7 @@ namespace CompatCheckAndMigrate.Helpers
         {
             _name = name;
             _applications = new List<Application>();
+            _vdirs = new List<VirtualDirectory>();
             _bindings = new List<Binding>();
             _databases = new List<Database>();
             _siteId = siteId;
@@ -94,6 +96,10 @@ namespace CompatCheckAndMigrate.Helpers
         {
             get { return _applications; }
         }
+        public List<VirtualDirectory> VDirs
+        {
+            get { return _vdirs; }
+        }
 
         public List<Database> Databases
         {
@@ -111,11 +117,16 @@ namespace CompatCheckAndMigrate.Helpers
             set { _appPoolName = value; }
         }
 
+       
         public string ServerName { get; set; }
 
         public void Add(Application app)
         {
             _applications.Add(app);
+        }
+        public void Add(VirtualDirectory vdir)
+        {
+            _vdirs.Add(vdir);
         }
 
         public void Add(Binding binding)
