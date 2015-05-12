@@ -90,12 +90,12 @@ namespace CompatCheckAndMigrate.Helpers
                                 continue;
                             }
 
-                            var builder = new SqlConnectionStringBuilder(dbConnectionString);
-                            if (!string.IsNullOrEmpty(builder.AttachDBFilename) && name == "LocalSqlServer")
-                            {
-                                // we ignore this since it is MOST LIKELY the default values from the machine.config connection string from .NET framework
-                                continue;
-                            }
+                            //var builder = new SqlConnectionStringBuilder(dbConnectionString);
+                            //if (!string.IsNullOrEmpty(builder.AttachDBFilename) && name == "LocalSqlServer")
+                            //{
+                            //     we ignore this since it is MOST LIKELY the default values from the machine.config connection string from .NET framework
+                            //    continue;
+                            //}
 
                             try
                             {
