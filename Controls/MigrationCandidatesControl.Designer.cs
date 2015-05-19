@@ -116,7 +116,7 @@ namespace CompatCheckAndMigrate.Controls
             this.codeplexRepoLinkLabel.AutoSize = true;
             this.codeplexRepoLinkLabel.Location = new System.Drawing.Point(232, 434);
             this.codeplexRepoLinkLabel.Name = "codeplexRepoLinkLabel";
-            this.codeplexRepoLinkLabel.Size = new System.Drawing.Size(76, 13);
+            this.codeplexRepoLinkLabel.Size = new System.Drawing.Size(64, 13);
             this.codeplexRepoLinkLabel.TabIndex = 27;
             this.codeplexRepoLinkLabel.TabStop = true;
             this.codeplexRepoLinkLabel.Text = "GitHub repo";
@@ -151,6 +151,7 @@ namespace CompatCheckAndMigrate.Controls
             this.siteTree.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.siteTree.ImageIndex = 0;
             this.siteTree.ImageList = this.treeImageList;
+            this.siteTree.LabelEdit = true;
             this.siteTree.Location = new System.Drawing.Point(33, 125);
             this.siteTree.Name = "siteTree";
             this.siteTree.SelectedImageIndex = 0;
