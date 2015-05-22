@@ -114,6 +114,12 @@
     <Reference Include="System.Management.Automation" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddDbConnectionDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddDbConnectionDialog.Designer.cs">
+      <DependentUpon>AddDbConnectionDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ConfirmationControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -245,6 +251,9 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
+    <EmbeddedResource Include="AddDbConnectionDialog.resx">
+      <DependentUpon>AddDbConnectionDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\ConfirmationControl.resx">
       <DependentUpon>ConfirmationControl.cs</DependentUpon>
       <SubType>Designer</SubType>

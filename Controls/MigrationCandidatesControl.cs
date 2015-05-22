@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
+using System.Data.Common;
+using System.Data.SqlClient;
 
 namespace CompatCheckAndMigrate.Controls
 {
@@ -228,7 +230,13 @@ namespace CompatCheckAndMigrate.Controls
                                     siteNode.Nodes.Add(new TreeNode(db.ToString(), 5, 5) { 
                                         Tag = db
                                     });
+                                    
                                 }
+                                
+                                siteNode.Nodes.Add(new TreeNode("Custom connection string", 5, 5)
+                                {
+                                    Tag = "AddDB",Checked=false
+                                });
                                 serverNode.Nodes.Add(siteNode);
                             }
                         }
@@ -326,12 +334,63 @@ namespace CompatCheckAndMigrate.Controls
             //
             // Add or remove selected items from the selected objects list.
             //
-            if (nodeChecked)
-            {
-                if (typeof(Site) == objectType)
+            if (nodeChecked) {
+                if(typeof(string) == objectType && selectedNode.Tag == "AddDB")
                 {
-                    if (!selectedObjs.SelectedSites.Contains((Site)selectedNode.Tag))
+                    AddDbConnectionDialog dbDialog = new AddDbConnectionDialog();
+                    if(dbDialog.ShowDialog() == DialogResult.OK)
                     {
+                        string dbConnectionString = dbDialog.textBoxDbConnectionString.Text.Trim();
+                        try
+                        {
+                            var dbConn = new DbConnectionStringBuilder { ConnectionString = dbConnectionString };
+                            // dbConn.ConnectionString = dbConnectionString;
+                            if (dbConn.ContainsKey("Provider") && (dbConn["Provider"].ToString() == "SQLOLEDB" || dbConn["Provider"].ToString().Contains("SQLNCLI")))
+                            {
+                                dbConn.Remove("Provider");
+                            }
+
+                            var sqlConn = new SqlConnectionStringBuilder(dbConn.ConnectionString);
+
+
+                            //sqlConn.ConnectionString = dbConnectionString;
+                            Site site = (Site)selectedNode.Parent.Tag;
+                            Database db = new Database("", sqlConn.InitialCatalog, sqlConn.ConnectionString) { ParentSite = site };
+                            site.Add(db);
+                            selectedNode.Tag = db;
+                            objectType = typeof(Database);
+                        }
+                        catch (System.ArgumentException ex)
+                        {
+                            MessageBox.Show("Invalid connection string.\r\n\r\nValid connection string should be like\r\n 'Data Source=<servername>; Initial Catalog=<intialCatalog>; Trusted_Connection=<Yes|No>'" );
+                            selectedNode.Tag = "AddDB";
+                            selectedNode.Checked = false;
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        selectedNode.Tag = "AddDB";
+                        selectedNode.Checked = false;
+                        return;
+                    }
+                   
+                }
+                //
+                // If this is a child node, and it's been checked, make sure its
+                // parent nodes are checked.
+                //
+                TreeNode nodeParent = selectedNode.Parent;
+                while (null != nodeParent) {
+                    if (!nodeParent.Checked) {
+                        nodeParent.Checked = true;
+                    }
+                    nodeParent = nodeParent.Parent;
+                }
+
+
+                if (typeof(Site) == objectType) {
+                    if (!selectedObjs.SelectedSites.Contains((Site)selectedNode.Tag)) {
                         selectedObjs.SelectedSites.Add((Site)selectedNode.Tag);
                     }
                     // It's actually not possible to check (enable) anything 
