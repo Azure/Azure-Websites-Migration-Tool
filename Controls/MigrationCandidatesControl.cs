@@ -314,8 +314,11 @@ namespace CompatCheckAndMigrate.Controls
             {
                 foreach (TreeNode child in selectedNode.Nodes)
                 {
-                    child.Checked = nodeChecked;
-                    this.SyncCheckedStatus(child, nodeChecked);
+                    if (child.Tag.ToString() != "AddDB")
+                    {
+                        child.Checked = nodeChecked;
+                        this.SyncCheckedStatus(child, nodeChecked);
+                    }
                 }
             }
         }
