@@ -7,7 +7,7 @@ REM Use ClickOnce to Deploy Applications That Can Run on Multiple Versions of th
 REM http://msdn.microsoft.com/en-us/library/ee517334.aspx
 
 set Update=0
-set Version=1.5.0.0
+set Version=1.6.0.0
 set Name=CompatCheckAndMigrate
 set Product=Azure Websites Migration Assistant
 set Publisher="Microsoft"
@@ -29,7 +29,7 @@ md %Name%\%Version%
 echo 3. Copy all of your application files to the version subdirectory, including executable files, assemblies, resources, and data files. If necessary, you can create additional subdirectories that contain additional files.
 xcopy %Name%.exe %Name%\%Version% /y
 xcopy %Name%.exe.config %Name%\%Version% /y
-xcopy *.dll %Name%\%Version% /y
+rem xcopy *.dll %Name%\%Version% /y
 
 echo 4. Create the application manifest with a call to Mage.exe. The following statement creates an application manifest for code compiled to run on the Intel x86 processor.
 pushd %Name%\%Version%
@@ -54,7 +54,7 @@ REM ren System.Web.Extensions.dll System.Web.Extensions.dll.deploy
 popd
 
 echo 6. Generate the deployment manifest with a call to Mage.exe. By default, Mage.exe will mark your ClickOnce deployment as an installed application, so that it can be run both online and offline. To make the application available only when the user is online, use the -Install option with a value of false. If you use the default, and users will install your application from a Web site or file share, make sure that the value of the -ProviderUrl option points to the location of the application manifest on the Web server or share.
-%Mage% -New Deployment -Processor msil -Install true -Publisher %Publisher% -SupportURL "%SupportURL%" -ProviderUrl "%PublishingLocation%/%Name%.application" -AppManifest "%Name%\%Version%\%Name%.exe.manifest" -ToFile "%Name%.application"
+%Mage% -New Deployment -Processor msil -Install true -Publisher %Publisher% -SupportURL "%SupportURL%" -ProviderUrl "%PublishingLocation%/%Name%.application" -AppManifest "%Name%\%Version%\%Name%.exe.manifest" -ToFile "%Name%.application" -Version %Version%
 	
 echo 7. Replace strings
 echo 7.1. Add mapFileExtensions
