@@ -283,8 +283,7 @@ namespace CompatCheckAndMigrate.Helpers
                         if (!setSize)
                         {
                             LogTrace("Content Published Succesfully For Site: {0} to {1} ", _localSite.SiteName, _publishSettings.SiteName);
-                            // TODO: commenting this out for now while fixing multithreading
-                            // Helper.UpdateStatus(_localSite.SiteName);
+                            Helper.UpdateStatus(_localSite.SiteName, _localSite.ServerName);
                         }
                         else
                         {
@@ -423,7 +422,7 @@ namespace CompatCheckAndMigrate.Helpers
                             sourceObject.SyncTo(provider, _publishSettings.SqlDBConnectionString.ConnectionString,
                                 destBaseOptions, new DeploymentSyncOptions());
                             this.LogTrace("DB Synced successfully");
-                            Helper.UpdateStatus(_localSite.SiteName, true);
+                            Helper.UpdateStatus(_localSite.SiteName, _localSite.ServerName, true);
                         }
                         catch (Exception ex)
                         {

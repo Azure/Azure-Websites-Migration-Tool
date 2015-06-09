@@ -15,6 +15,7 @@ using System.Configuration;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
 using System.Text;
+using System.Web;
 
 namespace CompatCheckAndMigrate.Helpers
 {
@@ -406,12 +407,12 @@ namespace CompatCheckAndMigrate.Helpers
 
         public static string SiteStatusApi
         {
-            get { return ConfigurationManager.AppSettings["SiteStatusApi"] ?? "/api/sitemigration/{0}/sitename/{1}"; }
+            get { return ConfigurationManager.AppSettings["SiteStatusApi"] ?? "/api/sitemigration/{0}/sitename/{1}/"; }
         }
 
         public static string DbStatusApi
         {
-            get { return ConfigurationManager.AppSettings["DbStatusApi"] ?? "/api/dbmigration/{0}/sitename/{1}"; }
+            get { return ConfigurationManager.AppSettings["DbStatusApi"] ?? "/api/dbmigration/{0}/sitename/{1}/"; }
         }
 
         public static string Results
@@ -445,15 +446,15 @@ namespace CompatCheckAndMigrate.Helpers
             get { return ConfigurationManager.AppSettings["DeploymentBaseOptionsType"] ?? "Microsoft.Web.Deployment.DeploymentBaseOptions"; }
         }
 
-        public static string UpdateStatus(string sitename, bool dbStatus = false)
+        public static string UpdateStatus(string sitename, string servername, bool dbStatus = false)
         {
-            string url = string.Format(dbStatus ? DbStatusApi : SiteStatusApi, AzureMigrationId, sitename);
-            string baseAddress = UrlCombine(
-                PostMigratePortal,
-                url);
+            // colons are not allowed in URLs
+            string siteNameWithServer = Uri.EscapeDataString(servername) + ":" + Uri.EscapeDataString(sitename);
+            siteNameWithServer = siteNameWithServer.Replace(":", "=x-colon=");
+            string url = string.Format(dbStatus ? DbStatusApi : SiteStatusApi, AzureMigrationId, siteNameWithServer);
+            string baseAddress = UrlCombine(PostMigratePortal, url);
             try
             {
-
                 var req = (HttpWebRequest)HttpWebRequest.Create(baseAddress);
                 req.Method = "PUT";
                 req.ContentType = "application/json";
