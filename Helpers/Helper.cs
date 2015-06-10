@@ -450,37 +450,50 @@ namespace CompatCheckAndMigrate.Helpers
         {
             // colons are not allowed in URLs
             string siteNameWithServer = Uri.EscapeDataString(servername) + ":" + Uri.EscapeDataString(sitename);
-            siteNameWithServer = siteNameWithServer.Replace(":", "=x-colon=");
+            siteNameWithServer = siteNameWithServer.Replace(":", "_x-colon_");
             string url = string.Format(dbStatus ? DbStatusApi : SiteStatusApi, AzureMigrationId, siteNameWithServer);
             string baseAddress = UrlCombine(PostMigratePortal, url);
-            try
+            int numRetries = 0;
+            string exceptionMsg = string.Empty;
+            while (numRetries < 3)
             {
-                var req = (HttpWebRequest)HttpWebRequest.Create(baseAddress);
-                req.Method = "PUT";
-                req.ContentType = "application/json";
-                req.ContentLength = 0;
-
-                var response = (HttpWebResponse)req.GetResponse();
-                if (response.StatusCode != HttpStatusCode.OK && response.StatusCode != HttpStatusCode.NoContent)
+                try
                 {
-                    var message = new StringBuilder();
-                    message.AppendFormat("Client: Receive Response HTTP/{0} {1} {2}\r\n", response.ProtocolVersion, (int)response.StatusCode, response.StatusDescription);
-                    if (response.ContentLength > 0)
+                    var req = (HttpWebRequest)HttpWebRequest.Create(baseAddress);
+                    req.Method = "PUT";
+                    req.ContentType = "application/json";
+                    req.ContentLength = 0;
+
+                    var response = (HttpWebResponse)req.GetResponse();
+                    if (response.StatusCode != HttpStatusCode.OK && response.StatusCode != HttpStatusCode.NoContent)
                     {
-                        using (var r = new StreamReader(response.GetResponseStream()))
+                        var message = new StringBuilder();
+                        message.AppendFormat("Client: Receive Response HTTP/{0} {1} {2}\r\n", response.ProtocolVersion, (int)response.StatusCode, response.StatusDescription);
+                        if (response.ContentLength > 0)
                         {
-                            message.AppendLine(r.ReadToEnd());
+                            using (var r = new StreamReader(response.GetResponseStream()))
+                            {
+                                message.AppendLine(r.ReadToEnd());
+                            }
                         }
+
+                        return message.ToString();
                     }
-                    return message.ToString();
+
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        return string.Empty;
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                return ex.ToString();
+                catch (Exception ex)
+                {
+                    exceptionMsg = ex.ToString();
+                }
+
+                numRetries++;
             }
 
-            return string.Empty;
+            return exceptionMsg;
         }
 
         public static bool IsWebDeployInstalled
