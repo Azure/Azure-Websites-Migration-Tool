@@ -48,6 +48,7 @@ namespace CompatCheckAndMigrate.Controls
             catch (Exception ex)
             {
                 _installHelper.LogInformation(ex.ToString());
+                TraceHelper.Tracer.WriteTrace(ex.ToString());
             }
         }
 
@@ -75,6 +76,7 @@ namespace CompatCheckAndMigrate.Controls
             }
             catch (Exception ex)
             {
+                TraceHelper.Tracer.WriteTrace(ex.ToString());
                 _installHelper.LogInformation(ex.ToString());
                 _installHelper.Dispose();
             }

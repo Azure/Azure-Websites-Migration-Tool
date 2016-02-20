@@ -53,6 +53,7 @@ namespace CompatCheckAndMigrate.Helpers
                     message += ex.Message;
                     MessageBox.Show(message, System.Windows.Forms.Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     this.Error = true;
+                    TraceHelper.Tracer.WriteTrace(message);
                 }
                 this.IISVersion = 7;
                 this.OSVersion = "6.1";
@@ -70,6 +71,7 @@ namespace CompatCheckAndMigrate.Helpers
                     message += ex.Message;
                     MessageBox.Show(message, System.Windows.Forms.Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     this.Error = true;
+                    TraceHelper.Tracer.WriteTrace(message);
                 }
 
                 this.IISVersion = 6;
@@ -108,6 +110,8 @@ namespace CompatCheckAndMigrate.Helpers
                 }
                 catch (Exception ex)
                 {
+                    TraceHelper.Tracer.WriteTrace("Unable to copy applicationhost.config");
+                    TraceHelper.Tracer.WriteTrace(ex.ToString());
                     throw new Exception("Unable to copy applicationhost.config", ex);
                 }
                 remoteSystemInfo.IISVersion = 7;
@@ -122,6 +126,8 @@ namespace CompatCheckAndMigrate.Helpers
                 }
                 catch (Exception ex)
                 {
+                    TraceHelper.Tracer.WriteTrace("Unable to copy metabase.xml");
+                    TraceHelper.Tracer.WriteTrace(ex.ToString());
                     throw new Exception("Unable to copy metabase.xml", ex);
                 }
                 remoteSystemInfo.IISVersion = 6;

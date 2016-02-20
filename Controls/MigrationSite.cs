@@ -175,6 +175,7 @@ namespace CompatCheckAndMigrate.Controls
             catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString());
+                TraceHelper.Tracer.WriteTrace(ex.ToString());
             }
         }
 
@@ -192,6 +193,7 @@ namespace CompatCheckAndMigrate.Controls
             catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString());
+                TraceHelper.Tracer.WriteTrace(ex.ToString());
             }
 
             var wizardStep = Helper.IsWebDeployInstalled
@@ -243,6 +245,7 @@ namespace CompatCheckAndMigrate.Controls
                 catch (Exception ex)
                 {
                     MessageBox.Show(ex.ToString());
+                    TraceHelper.Tracer.WriteTrace(ex.ToString());
                 }
             }
 

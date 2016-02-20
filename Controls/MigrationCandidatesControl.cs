@@ -365,9 +365,11 @@ namespace CompatCheckAndMigrate.Controls
                         }
                         catch (System.ArgumentException ex)
                         {
-                            MessageBox.Show("Invalid connection string.\r\n\r\nValid connection string should be like\r\n 'Data Source=<servername>; Initial Catalog=<intialCatalog>; Trusted_Connection=<Yes|No>'" );
+                            string message = "Invalid connection string.\r\n\r\nValid connection string should be like\r\n 'Data Source=<servername>; Initial Catalog=<intialCatalog>; Trusted_Connection=<Yes|No>'";
+                            MessageBox.Show(message);
                             selectedNode.Tag = "AddDB";
                             selectedNode.Checked = false;
+                            TraceHelper.Tracer.WriteTrace(message);
                             return;
                         }
                     }

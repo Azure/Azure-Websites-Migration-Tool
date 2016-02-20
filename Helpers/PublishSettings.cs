@@ -71,7 +71,9 @@ namespace CompatCheckAndMigrate.Helpers
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Invalid Publish Settings File: " + ex.ToString());
+                    string message = "Invalid Publish Settings File: " + ex.ToString();
+                    MessageBox.Show(message);
+                    TraceHelper.Tracer.WriteTrace(message);
                 }
             }
 
@@ -147,6 +149,8 @@ namespace CompatCheckAndMigrate.Helpers
                             catch (ArgumentException ex)
                             {
                                 string mesg = string.Format("Invalid agent type.  Valid options are '{0}'", string.Join(", ", Enum.GetNames(typeof(PublishSettingsRemoteAgent))));
+                                TraceHelper.Tracer.WriteTrace(mesg);
+                                TraceHelper.Tracer.WriteTrace(ex.ToString());
                                 throw new Exception(mesg, ex);
                             }
                         }

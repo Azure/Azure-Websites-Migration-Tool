@@ -51,8 +51,9 @@ namespace CompatCheckAndMigrate.Helpers
                 Dns.GetHostEntry(computername);
                 return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                TraceHelper.Tracer.WriteTrace(ex.ToString());
             }
 
             return false;
@@ -140,7 +141,9 @@ namespace CompatCheckAndMigrate.Helpers
             }
             catch (Exception ex)
             {
-                MessageBox.Show(string.Format("Failed to download {0} from: {1} due to: {2}", filename, url, ex.ToString()));
+                string message = string.Format("Failed to download {0} from: {1} due to: {2}", filename, url, ex.ToString());
+                MessageBox.Show(message);
+                TraceHelper.Tracer.WriteTrace(message);
             }
 
             return path;
@@ -159,6 +162,7 @@ namespace CompatCheckAndMigrate.Helpers
             catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString());
+                TraceHelper.Tracer.WriteTrace(ex.ToString());
             }
 
             return false;
@@ -205,6 +209,7 @@ namespace CompatCheckAndMigrate.Helpers
             catch (Exception ex)
             {
                 exceptionMessage = ex.Message;
+                TraceHelper.Tracer.WriteTrace(ex.ToString());
             }
 
             return false;
@@ -488,6 +493,7 @@ namespace CompatCheckAndMigrate.Helpers
                 catch (Exception ex)
                 {
                     exceptionMsg = ex.ToString();
+                    TraceHelper.Tracer.WriteTrace(ex.ToString());
                 }
 
                 numRetries++;
@@ -548,6 +554,7 @@ namespace CompatCheckAndMigrate.Helpers
             {
                 MessageBox.Show(ex.ToString());
                 helper.LogInformation(ex.ToString());
+                TraceHelper.Tracer.WriteTrace(ex.ToString());
             }
 
             return helper;
@@ -596,7 +603,7 @@ namespace CompatCheckAndMigrate.Helpers
                     }
                     catch (Exception ex)
                     {
-                        // MessageBox.Show(ex.ToString());
+                        TraceHelper.Tracer.WriteTrace(ex.ToString());
                     }
                 }
 

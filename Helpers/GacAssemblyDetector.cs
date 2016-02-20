@@ -60,7 +60,7 @@ namespace CompatCheckAndMigrate.Helpers
             }
             catch (Exception ex)
             {
-                MainForm.WriteTrace(ex.ToString());
+                TraceHelper.Tracer.WriteTrace(ex.ToString());
             }
 
             if (fileList.Any())
