@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -72,12 +73,12 @@ namespace CompatCheckAndMigrate.Controls
             PublishStatus pubStatus;
             if (_publishControlMap.TryGetValue(serverAndSiteName, out pubStatus))
             {
-                MainForm.WriteTrace("Incrementing progress bar for {0}", serverAndSiteName);
+                TraceHelper.Tracer.WriteTrace("Incrementing progress bar for {0}", serverAndSiteName);
                 pubStatus.PerformStep();
             }
             else
             {
-                MainForm.WriteTrace("Not Incrementing progress bar for {0} since status control was not found", serverAndSiteName);
+                TraceHelper.Tracer.WriteTrace("Not Incrementing progress bar for {0} since status control was not found", serverAndSiteName);
             }
         }
 
@@ -93,12 +94,12 @@ namespace CompatCheckAndMigrate.Controls
                     pubStatus.PerformStep();
                 }
 
-                MainForm.WriteTrace("Setting progress bar max for {0} to {1}", serverAndSiteName, maxValue);
+                TraceHelper.Tracer.WriteTrace("Setting progress bar max for {0} to {1}", serverAndSiteName, maxValue);
                 pubStatus.UpdateMaxProgressBarvalue(maxValue);
             }
             else
             {
-                MainForm.WriteTrace("Not setting progress bar max for {0} to {1} since status control was not found", serverAndSiteName, maxValue);
+                TraceHelper.Tracer.WriteTrace("Not setting progress bar max for {0} to {1} since status control was not found", serverAndSiteName, maxValue);
             }
         }
 
@@ -107,12 +108,12 @@ namespace CompatCheckAndMigrate.Controls
             PublishStatus pubStatus;
             if (_publishControlMap.TryGetValue(serverAndSiteName, out pubStatus))
             {
-                MainForm.WriteTrace("Setting content publish completion for {0} to {1}", serverAndSiteName, success);
+                TraceHelper.Tracer.WriteTrace("Setting content publish completion for {0} to {1}", serverAndSiteName, success);
                 pubStatus.ContentPublished(success);
             }
             else
             {
-                MainForm.WriteTrace("Not Setting content publish completion for {0} to {1} since control was not found", serverAndSiteName, success);
+                TraceHelper.Tracer.WriteTrace("Not Setting content publish completion for {0} to {1} since control was not found", serverAndSiteName, success);
             }
         }
 
@@ -121,7 +122,7 @@ namespace CompatCheckAndMigrate.Controls
             PublishStatus pubStatus;
             if (_publishControlMap.TryGetValue(serverAndSiteName, out pubStatus))
             {
-                MainForm.WriteTrace("Setting db publish completion for {0} to {1}", serverAndSiteName, success);
+                TraceHelper.Tracer.WriteTrace("Setting db publish completion for {0} to {1}", serverAndSiteName, success);
                 pubStatus.DbPublished(success);
             }
         }
@@ -130,12 +131,12 @@ namespace CompatCheckAndMigrate.Controls
         {
             if (lblStatus.InvokeRequired)
             {
-                MainForm.WriteTrace("Setting status label text to {0} via invoke", text);
+                TraceHelper.Tracer.WriteTrace("Setting status label text to {0} via invoke", text);
                 this.lblStatus.Invoke(new MethodInvoker(delegate() { this.lblStatus.Text = text; }));
             }
             else
             {
-                MainForm.WriteTrace("Setting status label text to {0}", text);
+                TraceHelper.Tracer.WriteTrace("Setting status label text to {0}", text);
                 this.lblStatus.Text = text;
             }
         }
@@ -157,7 +158,7 @@ namespace CompatCheckAndMigrate.Controls
 
             if (retry)
             {
-                MainForm.WriteTrace("Retrying ..");
+                TraceHelper.Tracer.WriteTrace("Retrying ..");
                 foreach (var server in this.IISServers.Servers.Values)
                 {
                     foreach (var site in server.Sites.Where(s => (!s.ContentPublishState || !s.DbPublishState)))
@@ -176,7 +177,7 @@ namespace CompatCheckAndMigrate.Controls
                         }
                         else
                         {
-                            MainForm.WriteTrace("No control found for site: {0}", site.SiteName);
+                            TraceHelper.Tracer.WriteTrace("No control found for site: {0}", site.SiteName);
                         }
                     }
                 }
@@ -197,7 +198,7 @@ namespace CompatCheckAndMigrate.Controls
                             contentTraceFileName,
                             dbTraceFileName);
 
-                        MainForm.WriteTrace("Adding control to map for site: {0}", site.SiteName);
+                        TraceHelper.Tracer.WriteTrace("Adding control to map for site: {0}", site.SiteName);
                         _publishControlMap[site.ServerName + site.SiteName] = pubStatus;
                         pubStatus.Dock = DockStyle.Top;
                         statusPanel.Controls.Add(pubStatus);
@@ -208,7 +209,7 @@ namespace CompatCheckAndMigrate.Controls
                         PublishStatus pubStatus;
                         if (!_publishControlMap.TryGetValue(site.ServerName + site.SiteName, out pubStatus))
                         {
-                            MainForm.WriteTrace("Adding control to map for site: {0} with site or db creation error", site.SiteName);
+                            TraceHelper.Tracer.WriteTrace("Adding control to map for site: {0} with site or db creation error", site.SiteName);
                             pubStatus = new PublishStatus(site.SiteName, site.SiteCreationError);
                             _publishControlMap[site.ServerName + site.SiteName] = pubStatus;
                             pubStatus.Dock = DockStyle.Top;
@@ -230,14 +231,14 @@ namespace CompatCheckAndMigrate.Controls
                         {
                             if (!site.ContentPublishState)
                             {
-                                MainForm.WriteTrace("Queuing operation for site: {0}", site.SiteName);
+                                TraceHelper.Tracer.WriteTrace("Queuing operation for site: {0}", site.SiteName);
                                 var operation = new PublishContentOperation(site, this);
                                 manager.Enqueue(operation);
                             }
 
                             if (!site.DbPublishState)
                             {
-                                MainForm.WriteTrace("Queing another operation for db for site: {0}", site.SiteName);
+                                TraceHelper.Tracer.WriteTrace("Queing another operation for db for site: {0}", site.SiteName);
                                 manager.Enqueue(new PublishDbOperation(site, this));
                             }
                         }
@@ -247,36 +248,51 @@ namespace CompatCheckAndMigrate.Controls
                 {
                     foreach (var server in this.IISServers.Servers.Values)
                     {
-                        foreach (var site in server.Sites.Where(s => s.PublishProfile != null && string.IsNullOrEmpty(s.SiteCreationError)))
+                        foreach (var site in server.Sites)
                         {
+                            if (site.PublishProfile == null)
+                            {
+                                TraceHelper.Tracer.WriteTrace("ERROR: Skipping publish, no publish profile found for site: {0}", site.SiteName);
+                                TraceHelper.Tracer.WriteTrace("HINT: Make sure that the publish profile element for the site contains the attribute" +
+                                                              " originalsitename=\"{0}:{1}\" attribute", server.Name, site.SiteName);
+                                TraceHelper.Tracer.WriteTrace("For more information see: https://www.movemetothecloud.net/Faq#toc12");
+                                continue;
+                            }
 
-                            MainForm.WriteTrace("Queuing operation for site: {0}", site.SiteName);
+                            if (string.IsNullOrEmpty(site.SiteCreationError))
+                            {
+                                TraceHelper.Tracer.WriteTrace("ERROR: Skipping publish, site creation error for site: {0}", site.SiteName);
+                                TraceHelper.Tracer.WriteTrace("Site creation error: {0}", site.SiteCreationError);
+                                continue;
+                            }
+
+                            TraceHelper.Tracer.WriteTrace("Queuing operation for site: {0}", site.SiteName);
                             var operation = new PublishContentOperation(site, this);
                             manager.Enqueue(operation);
                             if (operation.HasDatabase)
                             {
-                                MainForm.WriteTrace("Queing another operation for db for site: {0}", site.SiteName);
+                                TraceHelper.Tracer.WriteTrace("Queing another operation for db for site: {0}", site.SiteName);
                                 manager.Enqueue(new PublishDbOperation(site, this));
                             }
                         }
                     }
                 }
 
-                MainForm.WriteTrace("Calling start");
+                TraceHelper.Tracer.WriteTrace("Calling start");
                 manager.StartProcessing();
-                MainForm.WriteTrace("Caling Wait");
+                TraceHelper.Tracer.WriteTrace("Caling Wait");
                 manager.WaitForOperations();
             };
 
             _worker.RunWorkerCompleted += (object runWorkerCompletedSender, RunWorkerCompletedEventArgs runWorkerCompletedEventArgs) =>
             {
-                MainForm.WriteTrace("Wait complete. In worker completed");
+                TraceHelper.Tracer.WriteTrace("Wait complete. In worker completed");
                 this.progressPictureBox.Visible = false;
                 UpdateStatusLabel("Finished deploying");
 
                 if (runWorkerCompletedEventArgs.Error != null)
                 {
-                    MainForm.WriteTrace("Worker thread has errors {0}", runWorkerCompletedEventArgs.Error.Message);
+                    TraceHelper.Tracer.WriteTrace("Worker thread has errors {0}", runWorkerCompletedEventArgs.Error.Message);
                     MessageBox.Show(runWorkerCompletedEventArgs.Error.Message);
                 }
 
@@ -329,6 +345,11 @@ namespace CompatCheckAndMigrate.Controls
         private void btnBack_Click(object sender, EventArgs e)
         {
             FireGoToEvent(WizardSteps.SiteStep, this.IISServers, true);
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Process.Start(TraceHelper.Tracer.TraceFile);
         }
     }
 }

@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Web.Script.Serialization;
+using System.Windows.Forms;
 
 namespace CompatCheckAndMigrate.Helpers
 {
@@ -78,8 +79,10 @@ namespace CompatCheckAndMigrate.Helpers
 
         public void SetPublishSetting(Dictionary<string, string> siteErrorInfo, string publishSettingsFilePath, string serverName)
         {
+            TraceHelper.Tracer.WriteTrace("Searching for publishing settings for server: " + serverName);
             foreach (var site in this.Sites)
             {
+                TraceHelper.Tracer.WriteTrace("Searching for publishing settings for site: " + site);
                 var publishSetting = new PublishSettings(publishSettingsFilePath, site.SiteName, serverName);
                 if (!publishSetting.Initialized)
                 {
@@ -94,6 +97,13 @@ namespace CompatCheckAndMigrate.Helpers
                     {
                         site.SiteCreationError = siteError;
                     }
+                }
+
+                if (!publishSetting.Initialized)
+                {
+                    string message = "ERROR: cannot find publishing settings for site: " + site;
+                    MessageBox.Show(message);
+                    TraceHelper.Tracer.WriteTrace(message);
                 }
             }
         }

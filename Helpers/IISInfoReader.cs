@@ -127,6 +127,7 @@ namespace CompatCheckAndMigrate.Helpers
                             catch (System.ArgumentException e)
                             {
                                 MessageBox.Show(e.ToString());
+                                TraceHelper.Tracer.WriteTrace(e.ToString());
                             }
                         }
                     }
@@ -135,7 +136,7 @@ namespace CompatCheckAndMigrate.Helpers
             catch (Exception ex)
             {
                 site.Errors.Add(ex.Message);
-                // MessageBox.Show(ex.ToString());
+                TraceHelper.Tracer.WriteTrace(ex.ToString());
             }
         }
     }

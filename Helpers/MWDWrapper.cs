@@ -83,10 +83,11 @@ namespace CompatCheckAndMigrate.Helpers
             catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString());
+                TraceHelper.Tracer.WriteTrace(ex.ToString());
             }
 
             _writer.WriteLine(DateTime.Now + " : " + message);
-            MainForm.WriteTrace(message);
+            TraceHelper.Tracer.WriteTrace(message);
         }
 
         public void TraceEventHandler(object sender, DeploymentTraceEventArgs traceEvent)
@@ -292,7 +293,8 @@ namespace CompatCheckAndMigrate.Helpers
                     }
                     catch (Exception ex)
                     {
-                        LogTrace("Error syncing content for site: {0}", _localSite.SiteName);
+                        string message = string.Format("Error syncing content for site: {0}", _localSite.SiteName);
+                        LogTrace(message);
                         LogTrace(ex.ToString());
                         publishSucceeded = false;
                     }
@@ -344,6 +346,7 @@ namespace CompatCheckAndMigrate.Helpers
                         catch (Exception ex)
                         {
                             MessageBox.Show(ex.ToString());
+                            TraceHelper.Tracer.WriteTrace(ex.ToString());
                         }
                     }
                 }
@@ -357,16 +360,17 @@ namespace CompatCheckAndMigrate.Helpers
                 SqlConnectionStringBuilder connectionBuilder = new SqlConnectionStringBuilder(dbConnectionString);
                 if (connectionBuilder.IntegratedSecurity)
                 {
-                    MainForm.WriteTrace("Using trusted connection");
+                    TraceHelper.Tracer.WriteTrace("Using trusted connection");
                     return true;
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString());
+                TraceHelper.Tracer.WriteTrace(ex.ToString());
             }
 
-            MainForm.WriteTrace("Not using trusted conn");
+            TraceHelper.Tracer.WriteTrace("Not using trusted conn");
             return false;
         }
 

@@ -34,7 +34,7 @@ namespace CompatCheckAndMigrate.Controls
                 this.useScom = false;
             }
 
-            MainForm.WriteTrace("in set state remote");
+            TraceHelper.Tracer.WriteTrace("in set state remote");
             cbxDrive.SelectedIndex = 0;
             if (this.useScom)
             {

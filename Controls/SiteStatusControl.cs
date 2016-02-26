@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using CompatCheckAndMigrate.Helpers;
@@ -64,6 +66,11 @@ namespace CompatCheckAndMigrate.Controls
                     }
                 }
             }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Process.Start(TraceHelper.Tracer.TraceFile);
         }
     }
 }

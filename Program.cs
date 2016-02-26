@@ -7,6 +7,8 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Security.Principal;
 using System.Windows.Forms;
+using CompatCheckAndMigrate.Helpers;
+using Application = System.Windows.Forms.Application;
 
 namespace CompatCheckAndMigrate
 {
@@ -33,6 +35,7 @@ namespace CompatCheckAndMigrate
                 }
                 catch (Exception ex)
                 {
+                    TraceHelper.Tracer.WriteTrace(ex.ToString());
                     MessageBox.Show(ex.ToString());
                 }
             }

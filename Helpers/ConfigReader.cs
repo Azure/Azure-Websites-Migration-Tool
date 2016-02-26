@@ -155,6 +155,7 @@ namespace CompatCheckAndMigrate.Helpers
             {
                 // dont throw. Its ok if we dont get default document list. Let migration continue
                 MessageBox.Show(ex.ToString());
+                TraceHelper.Tracer.WriteTrace(ex.ToString());
             }
         }
         private static List<string> GetDefaultDocuments(string pathToConfig)
@@ -184,6 +185,7 @@ namespace CompatCheckAndMigrate.Helpers
             {
                 // dont throw. Its ok if we dont get default document list. Let migration continue
                 MessageBox.Show(ex.ToString());
+                TraceHelper.Tracer.WriteTrace(ex.ToString());
             }
 
             return docList.Values.ToList();

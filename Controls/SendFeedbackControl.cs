@@ -138,6 +138,7 @@ namespace CompatCheckAndMigrate.Controls
                         catch (Exception ex)
                         {
                             MessageBox.Show(ex.ToString());
+                            TraceHelper.Tracer.WriteTrace(ex.ToString());
                         }
                     }
                 }

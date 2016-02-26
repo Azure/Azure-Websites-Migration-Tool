@@ -61,10 +61,22 @@ namespace CompatCheckAndMigrate.Controls
         private void SaveButton_Click(object sender, EventArgs e)
         {
             string path = this.locationTextBox.Text;
-            string root = Path.GetDirectoryName(path);
-            if(!Directory.Exists(root))
+            string root = string.Empty;
+            if (File.Exists(path))
             {
-                string message = string.Format("The folder {0} does not exists", root);
+                root = Path.GetDirectoryName(path);
+            }
+            else
+            {
+                string message = string.Format("The file \"{0}\" does not exist", path);
+                MessageBox.Show(message, System.Windows.Forms.Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                return;
+            }
+
+            if (!Directory.Exists(root))
+            {
+                string message = string.Format("The folder \"{0}\" does not exist", root);
                 MessageBox.Show(message, System.Windows.Forms.Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                 return;
@@ -87,6 +99,7 @@ namespace CompatCheckAndMigrate.Controls
             catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString());
+                TraceHelper.Tracer.WriteTrace(ex.ToString());
             }
 
             var wizardStep = Helper.IsWebDeployInstalled

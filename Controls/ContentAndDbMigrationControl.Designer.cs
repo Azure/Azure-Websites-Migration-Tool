@@ -39,6 +39,7 @@ namespace CompatCheckAndMigrate.Controls
             this.feedbackButton = new System.Windows.Forms.Button();
             this.btnClose = new System.Windows.Forms.Button();
             this.statusPanel = new System.Windows.Forms.Panel();
+            this.button1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.progressPictureBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -133,11 +134,27 @@ namespace CompatCheckAndMigrate.Controls
             this.statusPanel.Size = new System.Drawing.Size(922, 397);
             this.statusPanel.TabIndex = 30;
             // 
+            // button1
+            // 
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.button1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(102)))), ((int)(((byte)(203)))), ((int)(((byte)(234)))));
+            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button1.ForeColor = System.Drawing.Color.White;
+            this.button1.Location = new System.Drawing.Point(313, 516);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(102, 41);
+            this.button1.TabIndex = 37;
+            this.button1.Text = "Open Log";
+            this.button1.UseVisualStyleBackColor = false;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // ContentAndDbMigrationControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.statusPanel);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.feedbackButton);
@@ -163,5 +180,6 @@ namespace CompatCheckAndMigrate.Controls
         private System.Windows.Forms.Button feedbackButton;
         private System.Windows.Forms.Button btnClose;
         private System.Windows.Forms.Panel statusPanel;
+        private System.Windows.Forms.Button button1;
     }
 }

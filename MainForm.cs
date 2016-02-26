@@ -19,9 +19,7 @@ namespace CompatCheckAndMigrate
     public partial class MainForm : Form
     {
         private Control _previousControl = null;
-        private Stream _traceStream;
-        private TextWriterTraceListener _textListener;
-
+        
         private Dictionary<WizardSteps, IWizardStep> _steps = new Dictionary<WizardSteps, IWizardStep>()
         {
             {WizardSteps.FeedbackPage, new SendFeedbackControl()},
@@ -40,11 +38,7 @@ namespace CompatCheckAndMigrate
 
         private void InitializeTrace()
         {
-            var path = Path.GetTempPath();
-            _traceStream = File.Create(Path.Combine(path, "migrationTrace.log"));
-            _textListener = new TextWriterTraceListener(_traceStream);
-            Trace.Listeners.Add(_textListener);
-            WriteTrace("Tracing Started");
+            TraceHelper.Tracer = new Tracer();
         }
 
         public MainForm()
@@ -58,16 +52,7 @@ namespace CompatCheckAndMigrate
 
         public static void WriteTrace(string format, params object[] args)
         {
-            var message = format;
-            try
-            {
-                message = string.Format(format, args);
-            }
-            catch
-            {
-            }
-            
-            Trace.WriteLine(DateTime.Now + " : " + message);
+            TraceHelper.Tracer.WriteTrace(format, args);
         }
 
         private static void CheckAndSetBrowserEmulation()
@@ -156,9 +141,7 @@ namespace CompatCheckAndMigrate
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            _traceStream.Flush();
-            _textListener.Dispose();
-            _traceStream.Dispose();
+            
         }
     }
 }

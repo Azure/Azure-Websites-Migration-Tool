@@ -32,6 +32,7 @@ namespace CompatCheckAndMigrate.Helpers
             catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString());
+                TraceHelper.Tracer.WriteTrace(ex.ToString());
             }
 
             return impersonator;
