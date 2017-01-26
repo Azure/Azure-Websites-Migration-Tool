@@ -259,7 +259,7 @@ namespace CompatCheckAndMigrate.Controls
                                 continue;
                             }
 
-                            if (string.IsNullOrEmpty(site.SiteCreationError))
+                            if (!string.IsNullOrEmpty(site.SiteCreationError))
                             {
                                 TraceHelper.Tracer.WriteTrace("ERROR: Skipping publish, site creation error for site: {0}", site.SiteName);
                                 TraceHelper.Tracer.WriteTrace("Site creation error: {0}", site.SiteCreationError);

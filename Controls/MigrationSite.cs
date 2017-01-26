@@ -253,6 +253,9 @@ namespace CompatCheckAndMigrate.Controls
         }
         private void BackButton_Click(object sender, EventArgs e)
         {
+            this.publishSettings = null;
+            checkPublishSettingsTimer.Enabled = true;
+            btnPublish.Visible = false;
             if (this.siteBrowser.CanGoBack)
             {
                 this.siteBrowser.GoBack();
