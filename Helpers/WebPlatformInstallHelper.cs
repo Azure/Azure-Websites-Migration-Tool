@@ -60,7 +60,7 @@ namespace CompatCheckAndMigrate.Helpers
 
     public class WebPlatformInstallHelper : InstallHelper
     {
-        private const string WebPiFeedUrl = @"http://www.microsoft.com/web/webpi/5.0/webproductlist.xml";
+        private const string WebPiFeedUrl = @"https://webpifeed.blob.core.windows.net/webpifeed/WebProductList.xml";
         private InstallManager _installManager;
         private bool _isInstallChainComplete = false;
         private InstallerControl _installControl;
