@@ -25,18 +25,25 @@ namespace CompatCheckAndMigrate.Helpers
 
         public void WriteTrace(string format, params object[] args)
         {
-            using (StreamWriter streamWriter = File.AppendText(this.TraceFile))
+            try
             {
-                var message = format;
-                try
+                using (StreamWriter streamWriter = File.AppendText(this.TraceFile))
                 {
-                    message = string.Format(format, args);
-                }
-                catch
-                {
-                }
+                    var message = format;
+                    try
+                    {
+                        message = string.Format(format, args);
+                    }
+                    catch
+                    {
+                    }
 
-                streamWriter.WriteLine(DateTime.Now + " : " + message);
+                    streamWriter.WriteLine(DateTime.Now + " : " + message);
+                }
+            }
+            catch
+            {
+                // eat. program shouldn't crash on trace write file load error....
             }
         }
     }
