@@ -126,8 +126,10 @@ namespace CompatCheckAndMigrate.Helpers
                             }
                             catch (System.ArgumentException e)
                             {
-                                MessageBox.Show(e.ToString());
-                                TraceHelper.Tracer.WriteTrace(e.ToString());
+                                var message = $"Error parsing connection string: SiteName: {site?.SiteName}. Exception: {e.ToString()}";
+                                var messageWithConnectionString = $"Copy to clipboard: Ctrl+C. Error parsing connection string: SiteName: {site?.SiteName}. ConnectionString: {dbConnectionString}. Exception: {e.ToString()}";
+                                TraceHelper.Tracer.WriteTrace(message);
+                                MessageBox.Show(messageWithConnectionString);
                             }
                         }
                     }
