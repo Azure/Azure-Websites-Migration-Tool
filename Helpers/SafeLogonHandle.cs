@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using Microsoft.Win32.SafeHandles;
 
-namespace CompatCheckAndMigrate.Helpers
+namespace AzureAppServiceMigrationTool.Helpers
 {
     internal class SafeLogonHandle : SafeHandleZeroOrMinusOneIsInvalid
     {

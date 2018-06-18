@@ -15,7 +15,7 @@ using System.Xml.XPath;
 using System.Data.Common;
 
 
-namespace CompatCheckAndMigrate.Helpers
+namespace AzureAppServiceMigrationTool.Helpers
 {
     /// <summary>
     /// The original logic for this class existed under the PowerShell PublishSettings

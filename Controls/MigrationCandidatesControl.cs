@@ -2,8 +2,8 @@
 // Licensed under the Apache License, Version 2.0.  
 // See License.txt in the project root for license information.
 
-using CompatCheckAndMigrate.Helpers;
-using CompatCheckAndMigrate.ObjectModel;
+using AzureAppServiceMigrationTool.Helpers;
+using AzureAppServiceMigrationTool.ObjectModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,7 +12,7 @@ using System.Windows.Forms;
 using System.Data.Common;
 using System.Data.SqlClient;
 
-namespace CompatCheckAndMigrate.Controls
+namespace AzureAppServiceMigrationTool.Controls
 {
     public partial class MigrationCandidatesControl : UserControl, IWizardStep
     {

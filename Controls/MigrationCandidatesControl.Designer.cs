@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0.  
 // See License.txt in the project root for license information.
 
-namespace CompatCheckAndMigrate.Controls
+namespace AzureAppServiceMigrationTool.Controls
 {
     partial class MigrationCandidatesControl
     {
@@ -102,7 +102,7 @@ namespace CompatCheckAndMigrate.Controls
             // busyPictureBox
             // 
             this.busyPictureBox.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.busyPictureBox.Image = global::CompatCheckAndMigrate.Properties.Resources.Search;
+            this.busyPictureBox.Image = global::AzureAppServiceMigrationTool.Properties.Resources.Search;
             this.busyPictureBox.Location = new System.Drawing.Point(348, 225);
             this.busyPictureBox.Name = "busyPictureBox";
             this.busyPictureBox.Size = new System.Drawing.Size(24, 26);

@@ -10,7 +10,7 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.Win32;
 
-namespace CompatCheckAndMigrate.Helpers
+namespace AzureAppServiceMigrationTool.Helpers
 {
     public class GacAssemblyDetector
     {

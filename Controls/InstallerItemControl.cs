@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace CompatCheckAndMigrate.Controls
+namespace AzureAppServiceMigrationTool.Controls
 {
     public partial class InstallerItemControl : UserControl
     {

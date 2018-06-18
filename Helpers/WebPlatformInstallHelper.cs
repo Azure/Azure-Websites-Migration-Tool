@@ -4,10 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
-using CompatCheckAndMigrate.Controls;
+using AzureAppServiceMigrationTool.Controls;
 using Microsoft.Web.PlatformInstaller;
 
-namespace CompatCheckAndMigrate.Helpers
+namespace AzureAppServiceMigrationTool.Helpers
 {
     public abstract class InstallHelper : IDisposable
     {

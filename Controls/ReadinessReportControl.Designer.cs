@@ -1,4 +1,4 @@
-﻿namespace CompatCheckAndMigrate.Controls
+﻿namespace AzureAppServiceMigrationTool.Controls
 {
     partial class ReadinessReportControl
     {
@@ -182,7 +182,7 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Image = global::CompatCheckAndMigrate.Properties.Resources.Busy;
+            this.pictureBox1.Image = global::AzureAppServiceMigrationTool.Properties.Resources.Busy;
             this.pictureBox1.Location = new System.Drawing.Point(153, 30);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(55, 18);

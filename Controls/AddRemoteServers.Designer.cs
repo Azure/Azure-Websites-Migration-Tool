@@ -1,4 +1,4 @@
-﻿namespace CompatCheckAndMigrate.Controls
+﻿namespace AzureAppServiceMigrationTool.Controls
 {
     partial class AddRemoteServers
     {
@@ -156,7 +156,7 @@
             // 
             // busyPictureBox
             // 
-            this.busyPictureBox.Image = global::CompatCheckAndMigrate.Properties.Resources.icon_drawer_processing_active;
+            this.busyPictureBox.Image = global::AzureAppServiceMigrationTool.Properties.Resources.icon_drawer_processing_active;
             this.busyPictureBox.Location = new System.Drawing.Point(11, 19);
             this.busyPictureBox.Name = "busyPictureBox";
             this.busyPictureBox.Size = new System.Drawing.Size(27, 30);
@@ -264,7 +264,7 @@
             this.loadingGif.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.loadingGif.Image = global::CompatCheckAndMigrate.Properties.Resources.AnimatedProgressBar;
+            this.loadingGif.Image = global::AzureAppServiceMigrationTool.Properties.Resources.AnimatedProgressBar;
             this.loadingGif.Location = new System.Drawing.Point(132, 143);
             this.loadingGif.Name = "loadingGif";
             this.loadingGif.Size = new System.Drawing.Size(109, 99);

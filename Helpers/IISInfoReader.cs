@@ -13,7 +13,7 @@ using System.Data.OleDb;
 using System.Data.Odbc;
 using System.Data.Sql;
 
-namespace CompatCheckAndMigrate.Helpers
+namespace AzureAppServiceMigrationTool.Helpers
 {
     public abstract class IISInfoReader
     {

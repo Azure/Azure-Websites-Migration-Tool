@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0.  
 // See License.txt in the project root for license information.
 
-namespace CompatCheckAndMigrate.Controls
+namespace AzureAppServiceMigrationTool.Controls
 {
     partial class PublishStatus
     {
@@ -117,9 +117,9 @@ namespace CompatCheckAndMigrate.Controls
             // 
             // DbStatusBox
             // 
-            this.DbStatusBox.ErrorImage = global::CompatCheckAndMigrate.Properties.Resources.Error;
-            this.DbStatusBox.Image = global::CompatCheckAndMigrate.Properties.Resources.icon_drawer_processing_active;
-            this.DbStatusBox.InitialImage = global::CompatCheckAndMigrate.Properties.Resources.icon_drawer_processing_active;
+            this.DbStatusBox.ErrorImage = global::AzureAppServiceMigrationTool.Properties.Resources.Error;
+            this.DbStatusBox.Image = global::AzureAppServiceMigrationTool.Properties.Resources.icon_drawer_processing_active;
+            this.DbStatusBox.InitialImage = global::AzureAppServiceMigrationTool.Properties.Resources.icon_drawer_processing_active;
             this.DbStatusBox.Location = new System.Drawing.Point(47, 51);
             this.DbStatusBox.Name = "DbStatusBox";
             this.DbStatusBox.Size = new System.Drawing.Size(26, 26);
@@ -129,9 +129,9 @@ namespace CompatCheckAndMigrate.Controls
             // 
             // SiteStatusBox
             // 
-            this.SiteStatusBox.ErrorImage = global::CompatCheckAndMigrate.Properties.Resources.Error;
-            this.SiteStatusBox.Image = global::CompatCheckAndMigrate.Properties.Resources.icon_drawer_processing_active;
-            this.SiteStatusBox.InitialImage = global::CompatCheckAndMigrate.Properties.Resources.icon_drawer_processing_active;
+            this.SiteStatusBox.ErrorImage = global::AzureAppServiceMigrationTool.Properties.Resources.Error;
+            this.SiteStatusBox.Image = global::AzureAppServiceMigrationTool.Properties.Resources.icon_drawer_processing_active;
+            this.SiteStatusBox.InitialImage = global::AzureAppServiceMigrationTool.Properties.Resources.icon_drawer_processing_active;
             this.SiteStatusBox.Location = new System.Drawing.Point(47, 23);
             this.SiteStatusBox.Name = "SiteStatusBox";
             this.SiteStatusBox.Size = new System.Drawing.Size(26, 26);

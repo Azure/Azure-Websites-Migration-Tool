@@ -4,7 +4,7 @@
 using System;
 using System.Data.SqlClient;
 
-namespace CompatCheckAndMigrate.Helpers
+namespace AzureAppServiceMigrationTool.Helpers
 {
     [Serializable]
     public class Database

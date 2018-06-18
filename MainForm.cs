@@ -6,15 +6,15 @@ using System;
 using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
-using CompatCheckAndMigrate.Controls;
-using CompatCheckAndMigrate.Helpers;
-using CompatCheckAndMigrate.ObjectModel;
+using AzureAppServiceMigrationTool.Controls;
+using AzureAppServiceMigrationTool.Helpers;
+using AzureAppServiceMigrationTool.ObjectModel;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
 
-namespace CompatCheckAndMigrate
+namespace AzureAppServiceMigrationTool
 {
     public partial class MainForm : Form
     {

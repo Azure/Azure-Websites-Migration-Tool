@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using System.Xml;
 using Microsoft.Web.Administration;
 
-namespace CompatCheckAndMigrate.Helpers
+namespace AzureAppServiceMigrationTool.Helpers
 {
     public class ConfigReader : IISInfoReader
     {
@@ -342,7 +342,7 @@ namespace CompatCheckAndMigrate.Helpers
 
             var antaresSchema = new XmlDocument();
             antaresSchema.Load(Assembly.GetExecutingAssembly()
-                            .GetManifestResourceStream("CompatCheckAndMigrate.Resources.IIS_MergedSchema.xml"));
+                            .GetManifestResourceStream("AzureAppServiceMigrationTool.Resources.IIS_MergedSchema.xml"));
             var customerAppHost = new XmlDocument();
 
             var userApphostConfig = Path.Combine(Environment.SystemDirectory,

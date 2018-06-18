@@ -1,4 +1,4 @@
-﻿namespace CompatCheckAndMigrate
+﻿namespace AzureAppServiceMigrationTool
 {
     partial class MainForm
     {

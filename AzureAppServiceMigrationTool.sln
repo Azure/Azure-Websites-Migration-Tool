@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27428.2037
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureAppServiceMigrationAssistant", "AzureAppServiceMigrationAssistant.csproj", "{D7A92F7E-5BC9-44C1-A4B5-A2FE32CFC405}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureAppServiceMigrationTool", "AzureAppServiceMigrationTool.csproj", "{D7A92F7E-5BC9-44C1-A4B5-A2FE32CFC405}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

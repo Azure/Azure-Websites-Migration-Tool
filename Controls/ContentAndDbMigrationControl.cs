@@ -9,10 +9,10 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using CompatCheckAndMigrate.Helpers;
-using CompatCheckAndMigrate.ObjectModel;
+using AzureAppServiceMigrationTool.Helpers;
+using AzureAppServiceMigrationTool.ObjectModel;
 
-namespace CompatCheckAndMigrate.Controls
+namespace AzureAppServiceMigrationTool.Controls
 {
     public partial class ContentAndDbMigrationControl : UserControl, IWizardStep
     {

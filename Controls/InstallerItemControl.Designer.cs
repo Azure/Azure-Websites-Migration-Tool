@@ -1,4 +1,4 @@
-﻿namespace CompatCheckAndMigrate.Controls
+﻿namespace AzureAppServiceMigrationTool.Controls
 {
     partial class InstallerItemControl
     {
@@ -46,9 +46,9 @@
             // 
             // InstallerStatusBox
             // 
-            this.InstallerStatusBox.ErrorImage = global::CompatCheckAndMigrate.Properties.Resources.Error;
-            this.InstallerStatusBox.Image = global::CompatCheckAndMigrate.Properties.Resources.icon_drawer_processing_active;
-            this.InstallerStatusBox.InitialImage = global::CompatCheckAndMigrate.Properties.Resources.icon_drawer_processing_active;
+            this.InstallerStatusBox.ErrorImage = global::AzureAppServiceMigrationTool.Properties.Resources.Error;
+            this.InstallerStatusBox.Image = global::AzureAppServiceMigrationTool.Properties.Resources.icon_drawer_processing_active;
+            this.InstallerStatusBox.InitialImage = global::AzureAppServiceMigrationTool.Properties.Resources.icon_drawer_processing_active;
             this.InstallerStatusBox.Location = new System.Drawing.Point(14, 10);
             this.InstallerStatusBox.Name = "InstallerStatusBox";
             this.InstallerStatusBox.Size = new System.Drawing.Size(26, 25);

@@ -3,8 +3,8 @@
 // See License.txt in the project root for license information.
 
 using System.IO;
-using CompatCheckAndMigrate.Helpers;
-using CompatCheckAndMigrate.ObjectModel;
+using AzureAppServiceMigrationTool.Helpers;
+using AzureAppServiceMigrationTool.ObjectModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,7 +14,7 @@ using System.Net;
 using System.Text;
 using System.Windows.Forms;
 
-namespace CompatCheckAndMigrate.Controls
+namespace AzureAppServiceMigrationTool.Controls
 {
     public partial class ReadinessReportControl : UserControl, IWizardStep
     {

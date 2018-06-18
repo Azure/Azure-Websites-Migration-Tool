@@ -1,4 +1,4 @@
-﻿namespace CompatCheckAndMigrate.Controls
+﻿namespace AzureAppServiceMigrationTool.Controls
 {
     partial class PickPublishSettingsControl
     {

@@ -7,10 +7,10 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Security.Principal;
 using System.Windows.Forms;
-using CompatCheckAndMigrate.Helpers;
+using AzureAppServiceMigrationTool.Helpers;
 using Application = System.Windows.Forms.Application;
 
-namespace CompatCheckAndMigrate
+namespace AzureAppServiceMigrationTool
 {
     internal static class Program
     {

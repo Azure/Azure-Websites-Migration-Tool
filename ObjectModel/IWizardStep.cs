@@ -4,7 +4,7 @@
 
 using System;
 
-namespace CompatCheckAndMigrate.ObjectModel
+namespace AzureAppServiceMigrationTool.ObjectModel
 {
     public interface IWizardStep
     {

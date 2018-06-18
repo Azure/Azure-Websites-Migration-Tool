@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0.  
 // See License.txt in the project root for license information.
 
-namespace CompatCheckAndMigrate.Controls
+namespace AzureAppServiceMigrationTool.Controls
 {
     partial class ContentAndDbMigrationControl
     {
@@ -82,7 +82,7 @@ namespace CompatCheckAndMigrate.Controls
             // progressPictureBox
             // 
             this.progressPictureBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.progressPictureBox.Image = global::CompatCheckAndMigrate.Properties.Resources.Busy;
+            this.progressPictureBox.Image = global::AzureAppServiceMigrationTool.Properties.Resources.Busy;
             this.progressPictureBox.Location = new System.Drawing.Point(34, 471);
             this.progressPictureBox.Name = "progressPictureBox";
             this.progressPictureBox.Size = new System.Drawing.Size(56, 39);

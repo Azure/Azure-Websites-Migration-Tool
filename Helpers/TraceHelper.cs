@@ -5,7 +5,7 @@
 using System;
 using System.IO;
 
-namespace CompatCheckAndMigrate.Helpers
+namespace AzureAppServiceMigrationTool.Helpers
 {
     public static class TraceHelper
     {
