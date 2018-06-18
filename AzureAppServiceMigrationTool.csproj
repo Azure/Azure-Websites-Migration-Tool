@@ -89,20 +89,21 @@
     <TargetZone>LocalIntranet</TargetZone>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Web.Administration, Version=7.9.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Web.Administration, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Windows\System32\inetsrv\Microsoft.Web.Administration.dll</HintPath>
+      <HintPath>lib\Microsoft.Web.Administration.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Web.Delegation, Version=7.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files\IIS\Microsoft Web Deploy V3\Microsoft.Web.Delegation.dll</HintPath>
+      <HintPath>lib\Microsoft.Web.Delegation.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Web.Deployment, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files\IIS\Microsoft Web Deploy V3\Microsoft.Web.Deployment.dll</HintPath>
+      <HintPath>lib\Microsoft.Web.Deployment.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Web.PlatformInstaller, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\Microsoft.Web.PlatformInstaller.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
@@ -368,6 +369,10 @@
     <None Include="Resources\icon-drawer-processing-active.gif" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="lib\Microsoft.Web.Administration.dll" />
+    <Content Include="lib\Microsoft.Web.Delegation.dll" />
+    <Content Include="lib\Microsoft.Web.Deployment.dll" />
+    <Content Include="lib\Microsoft.Web.PlatformInstaller.dll" />
     <Content Include="workitems.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -402,6 +407,7 @@
       <FileType>File</FileType>
     </PublishFile>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
