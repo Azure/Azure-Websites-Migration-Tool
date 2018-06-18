@@ -61,12 +61,6 @@
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup>
-    <ManifestCertificateThumbprint>42deb04f4d8a154fd0621cb2808e2930821fa0c9</ManifestCertificateThumbprint>
-  </PropertyGroup>
-  <PropertyGroup>
-    <ManifestKeyFile>AzureAppServiceMigrationAssistant_1_TemporaryKey.pfx</ManifestKeyFile>
-  </PropertyGroup>
-  <PropertyGroup>
     <GenerateManifests>false</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
@@ -318,9 +312,6 @@
     </EmbeddedResource>
     <None Include="App.config">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="AzureAppServiceMigrationAssistant_1_TemporaryKey.pfx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="oldclickonce.cmd" />
     <None Include="Properties\app.manifest" />
