@@ -31,8 +31,8 @@
     <PublisherName>Microsoft Azure App Service</PublisherName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>clickonce.htm</WebPage>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.0</ApplicationVersion>
+    <ApplicationRevision>1</ApplicationRevision>
+    <ApplicationVersion>1.0.0.1</ApplicationVersion>
     <UseApplicationTrust>true</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -365,6 +365,7 @@
     <Content Include="lib\Microsoft.Web.Delegation.dll" />
     <Content Include="lib\Microsoft.Web.Deployment.dll" />
     <Content Include="lib\Microsoft.Web.PlatformInstaller.dll" />
+    <Content Include="tools\mage.exe" />
     <Content Include="workitems.txt" />
   </ItemGroup>
   <ItemGroup>
