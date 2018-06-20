@@ -28,7 +28,8 @@
     <InstallUrl>https://www.movemetothecloud.net/</InstallUrl>
     <SupportUrl>https://www.movemetothecloud.net/</SupportUrl>
     <ProductName>Azure App Service Migration Tool</ProductName>
-    <PublisherName>Microsoft Azure App Service</PublisherName>
+    <PublisherName>Microsoft Corporation</PublisherName>
+    <SuiteName>Azure App Service</SuiteName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>clickonce.htm</WebPage>
     <ApplicationRevision>1</ApplicationRevision>
