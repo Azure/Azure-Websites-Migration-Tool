@@ -22,18 +22,18 @@ namespace AzureAppServiceMigrationTool
         
         private Dictionary<WizardSteps, IWizardStep> _steps = new Dictionary<WizardSteps, IWizardStep>()
         {
-            {WizardSteps.FeedbackPage, new SendFeedbackControl()},
+            { WizardSteps.FeedbackPage, new SendFeedbackControl()},
             { WizardSteps.MigrationCandidates, new MigrationCandidatesControl() },
             { WizardSteps.ReadinessReport, new ReadinessReportControl() },
             { WizardSteps.SaveReadinessReport, new SaveReadinessReportControl() },
             { WizardSteps.Confirmation, new ConfirmationControl() },
-            {WizardSteps.ContentAndDbMigration, new ContentAndDbMigrationControl()},
-            {WizardSteps.SiteStep,new MigrationSite()},
-            {WizardSteps.InstallWebDeploy, new InstallerControl()},
-            {WizardSteps.SiteNotMigrated, new SiteStatusControl()},
-            {WizardSteps.RemoteComputerInfo, new RemoteServerControl()},
-            {WizardSteps.AddRemoteServers, new AddRemoteServers()},
-            {WizardSteps.PickPublishSettings, new PickPublishSettingsControl()},
+            { WizardSteps.ContentAndDbMigration, new ContentAndDbMigrationControl()},
+            { WizardSteps.SiteStep,new MigrationSite()},
+            { WizardSteps.InstallWebDeploy, new InstallerControl()},
+            { WizardSteps.SiteNotMigrated, new SiteStatusControl()},
+            { WizardSteps.RemoteComputerInfo, new RemoteServerControl()},
+            { WizardSteps.AddRemoteServers, new AddRemoteServers()},
+            { WizardSteps.PickPublishSettings, new PickPublishSettingsControl()},
         };
 
         private void InitializeTrace()

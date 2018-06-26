@@ -49,9 +49,10 @@ namespace AzureAppServiceMigrationTool.Controls
             // 
             this.busyPictureBox.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.busyPictureBox.Image = global::AzureAppServiceMigrationTool.Properties.Resources.AnimatedProgressBar;
-            this.busyPictureBox.Location = new System.Drawing.Point(270, 150);
+            this.busyPictureBox.Location = new System.Drawing.Point(405, 231);
+            this.busyPictureBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.busyPictureBox.Name = "busyPictureBox";
-            this.busyPictureBox.Size = new System.Drawing.Size(105, 103);
+            this.busyPictureBox.Size = new System.Drawing.Size(158, 158);
             this.busyPictureBox.TabIndex = 11;
             this.busyPictureBox.TabStop = false;
             this.busyPictureBox.Visible = false;
@@ -68,9 +69,10 @@ namespace AzureAppServiceMigrationTool.Controls
             this.btnPublish.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnPublish.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnPublish.ForeColor = System.Drawing.Color.White;
-            this.btnPublish.Location = new System.Drawing.Point(654, 9);
+            this.btnPublish.Location = new System.Drawing.Point(981, 14);
+            this.btnPublish.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnPublish.Name = "btnPublish";
-            this.btnPublish.Size = new System.Drawing.Size(125, 41);
+            this.btnPublish.Size = new System.Drawing.Size(188, 63);
             this.btnPublish.TabIndex = 12;
             this.btnPublish.Text = "Begin Publish";
             this.btnPublish.UseVisualStyleBackColor = false;
@@ -83,9 +85,10 @@ namespace AzureAppServiceMigrationTool.Controls
             this.BackButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.BackButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.BackButton.ForeColor = System.Drawing.Color.White;
-            this.BackButton.Location = new System.Drawing.Point(543, 9);
+            this.BackButton.Location = new System.Drawing.Point(814, 14);
+            this.BackButton.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.BackButton.Name = "BackButton";
-            this.BackButton.Size = new System.Drawing.Size(105, 41);
+            this.BackButton.Size = new System.Drawing.Size(158, 63);
             this.BackButton.TabIndex = 18;
             this.BackButton.Text = "Back";
             this.BackButton.UseVisualStyleBackColor = false;
@@ -96,18 +99,20 @@ namespace AzureAppServiceMigrationTool.Controls
             this.panel1.Controls.Add(this.BackButton);
             this.panel1.Controls.Add(this.btnPublish);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(0, 371);
+            this.panel1.Location = new System.Drawing.Point(0, 570);
+            this.panel1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(792, 55);
+            this.panel1.Size = new System.Drawing.Size(1188, 85);
             this.panel1.TabIndex = 20;
             // 
             // siteBrowser
             // 
             this.siteBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
             this.siteBrowser.Location = new System.Drawing.Point(0, 0);
-            this.siteBrowser.MinimumSize = new System.Drawing.Size(20, 20);
+            this.siteBrowser.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.siteBrowser.MinimumSize = new System.Drawing.Size(30, 31);
             this.siteBrowser.Name = "siteBrowser";
-            this.siteBrowser.Size = new System.Drawing.Size(790, 369);
+            this.siteBrowser.Size = new System.Drawing.Size(1186, 568);
             this.siteBrowser.TabIndex = 21;
             this.siteBrowser.Navigated += new System.Windows.Forms.WebBrowserNavigatedEventHandler(this.siteBrowser_Navigated);
             this.siteBrowser.Navigating += new System.Windows.Forms.WebBrowserNavigatingEventHandler(this.siteBrowser_Navigating);
@@ -118,20 +123,22 @@ namespace AzureAppServiceMigrationTool.Controls
             this.panel2.Controls.Add(this.siteBrowser);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(0, 0);
+            this.panel2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(792, 371);
+            this.panel2.Size = new System.Drawing.Size(1188, 570);
             this.panel2.TabIndex = 22;
             // 
             // MigrationSite
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.busyPictureBox);
+            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "MigrationSite";
-            this.Size = new System.Drawing.Size(792, 426);
+            this.Size = new System.Drawing.Size(1188, 655);
             ((System.ComponentModel.ISupportInitialize)(this.busyPictureBox)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);

@@ -34,7 +34,7 @@ namespace AzureAppServiceMigrationTool.Controls
             {
                 this.IISServers = (IISServers) state;
                 DisplayReadinessReportInfo();
-                this.UploadButton.Enabled = this.SaveFileLocallyLinkLabel.Enabled = true;
+                this.UploadButton.Enabled = this.btnSaveLocally.Enabled = this.btnPublishSettings.Enabled = true;
             }
         }
 
@@ -46,13 +46,6 @@ namespace AzureAppServiceMigrationTool.Controls
                 _goTo(this, new GoToWizardStepEventArgs(step, state));
             }
         }
-
-        private void SaveFileLocallyLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            string jsonString = this.IISServers.Serialize();
-            FireGoToEvent(WizardSteps.SaveReadinessReport, jsonString);
-        }
-
         private void UploadButton_Click(object sender, EventArgs e)
         {
             UploadData();
@@ -143,7 +136,7 @@ namespace AzureAppServiceMigrationTool.Controls
 
         private void UploadData()
         {
-            this.UploadButton.Enabled = this.SaveFileLocallyLinkLabel.Enabled = this.BackButton.Enabled = false;
+            this.UploadButton.Enabled = this.btnSaveLocally.Enabled = this.btnPublishSettings.Enabled = this.BackButton.Enabled = false;
             this.busyPanel.Visible = true;
 
             // Start serialization and uploading in a background thread.
@@ -188,7 +181,7 @@ namespace AzureAppServiceMigrationTool.Controls
                 this.busyPanel.Visible = false;
 
                 // Re-enable the upload and save buttons.
-                this.UploadButton.Enabled = this.SaveFileLocallyLinkLabel.Enabled = this.BackButton.Enabled = true;
+                this.UploadButton.Enabled = this.btnSaveLocally.Enabled = this.btnPublishSettings.Enabled = this.BackButton.Enabled = true;
 
                 if (runWorkerCompletedEventArgs.Error != null)
                 {
@@ -207,7 +200,14 @@ namespace AzureAppServiceMigrationTool.Controls
             FireGoToEvent(WizardSteps.MigrationCandidates, this.IISServers);
         }
 
-        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+
+        private void btnSaveLocally_Click(object sender, EventArgs e)
+        {
+            string jsonString = this.IISServers.Serialize();
+            FireGoToEvent(WizardSteps.SaveReadinessReport, jsonString);
+        }
+
+        private void btnPublishSettings_Click(object sender, EventArgs e)
         {
             FireGoToEvent(WizardSteps.PickPublishSettings, this.IISServers);
         }
