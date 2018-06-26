@@ -83,7 +83,7 @@
             this.UploadButton.Name = "UploadButton";
             this.UploadButton.Size = new System.Drawing.Size(291, 63);
             this.UploadButton.TabIndex = 6;
-            this.UploadButton.Text = "View Readiness Report";
+            this.UploadButton.Text = "Readiness Assessment";
             this.UploadButton.UseVisualStyleBackColor = false;
             this.UploadButton.Click += new System.EventHandler(this.UploadButton_Click);
             // 
@@ -149,7 +149,7 @@
             this.busyDescriptionLabel.Name = "busyDescriptionLabel";
             this.busyDescriptionLabel.Size = new System.Drawing.Size(532, 52);
             this.busyDescriptionLabel.TabIndex = 16;
-            this.busyDescriptionLabel.Text = "Rendering Report";
+            this.busyDescriptionLabel.Text = "Analyzing Report";
             this.busyDescriptionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // pictureBox1
