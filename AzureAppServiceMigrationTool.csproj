@@ -368,6 +368,8 @@
     <Content Include="lib\Microsoft.Web.Delegation.dll" />
     <Content Include="lib\Microsoft.Web.Deployment.dll" />
     <Content Include="lib\Microsoft.Web.PlatformInstaller.dll" />
+    <None Include="Resources\Icon2.ico" />
+    <None Include="Resources\favicon.ico" />
     <Content Include="tools\mage.exe" />
     <Content Include="workitems.txt" />
   </ItemGroup>
