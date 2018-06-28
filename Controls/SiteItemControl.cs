@@ -10,7 +10,7 @@ namespace AzureAppServiceMigrationTool.Controls
         public SiteItemControl(string sitename, bool success)
         {
             InitializeComponent();
-            _hostname = "http://" + sitename + ".azurewebsites.net";
+            _hostname = "https://" + sitename + ".azurewebsites.net";
             siteLink.Text = _hostname;
             SiteNameLabel.Text = sitename;
             if (success)

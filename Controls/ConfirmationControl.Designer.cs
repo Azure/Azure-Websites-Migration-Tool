@@ -54,7 +54,7 @@ namespace AzureAppServiceMigrationTool.Controls
             this.ViewReportLinkLabel.Size = new System.Drawing.Size(209, 13);
             this.ViewReportLinkLabel.TabIndex = 11;
             this.ViewReportLinkLabel.TabStop = true;
-            this.ViewReportLinkLabel.Text = "http://migrationassistant.azurewebsites.net";
+            this.ViewReportLinkLabel.Text = "https://www.movemetothecloud.net";
             this.ViewReportLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ViewReportLinkLabel_LinkClicked);
             // 
             // descriptionLabel

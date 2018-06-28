@@ -46,12 +46,12 @@ namespace AzureAppServiceMigrationTool.Helpers
         public static string[] MigrationDependencyProductsPost2003 = { "WASProcessModel", "WASConfigurationAPI", "wdeploy", "dacfx" };
 
         public const string WebDeployMSI64 =
-            "http://download.microsoft.com/download/A/5/0/A502BE57-7848-42B8-97D5-DEB2069E2B05/WebDeploy_amd64_en-US.msi";
+            "https://download.microsoft.com/download/A/5/0/A502BE57-7848-42B8-97D5-DEB2069E2B05/WebDeploy_amd64_en-US.msi";
 
         public const string WebDeployMSI32 =
-            "http://download.microsoft.com/download/A/5/0/A502BE57-7848-42B8-97D5-DEB2069E2B05/WebDeploy_x86_en-US.msi";
+            "https://download.microsoft.com/download/A/5/0/A502BE57-7848-42B8-97D5-DEB2069E2B05/WebDeploy_x86_en-US.msi";
 
-        public const string WebPIUrl64 = @"http://download.microsoft.com/download/C/F/F/CFF3A0B8-99D4-41A2-AE1A-496C08BEB904/WebPlatformInstaller_amd64_en-US.msi";
+        public const string WebPIUrl64 = @"https://download.microsoft.com/download/C/F/F/CFF3A0B8-99D4-41A2-AE1A-496C08BEB904/WebPlatformInstaller_amd64_en-US.msi";
 
         public const string DacfxUrlFormat = "http://go.microsoft.com/fwlink/?LinkID={0}&CLCID=0x409";
         

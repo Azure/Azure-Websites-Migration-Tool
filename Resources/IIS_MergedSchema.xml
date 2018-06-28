@@ -721,7 +721,7 @@
     <attribute name="exceptionCatchEnable" type="bool" defaultValue="true" />
     <attribute name="lcid" type="uint" defaultValue="0" validationType="integerRange" validationParameter="0,2147483647" />
     <attribute name="runOnEndAnonymously" type="bool" defaultValue="true" />
-    <attribute name="scriptErrorMessage" type="string" defaultValue="An error occurred on the server when processing the URL. Please contact the system administrator. &lt;p/> If you are the system administrator please click &lt;a href=&quot;http://go.microsoft.com/fwlink/?LinkID=82731&quot;>here&lt;/a> to find out more about this error." validationType="nonEmptyString" />
+    <attribute name="scriptErrorMessage" type="string" defaultValue="An error occurred on the server when processing the URL. Please contact the system administrator. &lt;p/> If you are the system administrator please click &lt;a href=&quot;https://go.microsoft.com/fwlink/?LinkID=82731&quot;>here&lt;/a> to find out more about this error." validationType="nonEmptyString" />
     <attribute name="scriptErrorSentToBrowser" type="bool" defaultValue="false" />
     <attribute name="scriptLanguage" type="string" defaultValue="VBScript" validationType="nonEmptyString" />
     <attribute name="bufferingOn" type="bool" defaultValue="true" />
@@ -959,7 +959,7 @@
       <enum name="ExecuteURL" value="1" />
       <enum name="Redirect" value="2" />
     </attribute>
-    <attribute name="detailedMoreInformationLink" type="string" defaultValue="http://go.microsoft.com/fwlink/?LinkID=62293" required="false" />
+    <attribute name="detailedMoreInformationLink" type="string" defaultValue="https://go.microsoft.com/fwlink/?LinkID=62293" required="false" />
     <attribute name="allowAbsolutePathsWhenDelegated" type="bool" defaultValue="false" />
     <collection addElement="error" clearElement="clear" removeElement="remove">
       <attribute name="statusCode" type="uint" required="true" isCombinedKey="true" validationType="integerRange" validationParameter="400,999" />

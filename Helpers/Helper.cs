@@ -392,7 +392,7 @@ namespace AzureAppServiceMigrationTool.Helpers
 
         public static string LicenseLink
         {
-            get { return ConfigurationManager.AppSettings["LicenseLink"] ?? "http://www.apache.org/licenses/LICENSE-2.0.html"; }
+            get { return ConfigurationManager.AppSettings["LicenseLink"] ?? "https://www.apache.org/licenses/LICENSE-2.0.html"; }
         }
 
         public static string CodePlexRepoLink

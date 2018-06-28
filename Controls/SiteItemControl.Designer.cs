@@ -54,7 +54,7 @@
             this.siteLink.Size = new System.Drawing.Size(117, 13);
             this.siteLink.TabIndex = 1;
             this.siteLink.TabStop = true;
-            this.siteLink.Text = "http://www.mysite.com";
+            this.siteLink.Text = "https://www.mysite.com";
             this.siteLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.siteLink_LinkClicked);
             // 
             // siteStatusBox
