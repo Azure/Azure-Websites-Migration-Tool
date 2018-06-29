@@ -192,8 +192,14 @@ namespace AzureAppServiceMigrationTool.Controls
                         string dbTraceFileName = Helper.NewTempFile;
                         site.PublishProfile.ContentTraceFile = contentTraceFileName;
                         site.PublishProfile.DbTraceFile = dbTraceFileName;
+                        var builder = new UriBuilder(site.PublishProfile.DestinationAppUrl);
+                        builder.Scheme = "https";
+                        Uri httpsLink =  builder.Uri;
+                        var clean = httpsLink.GetComponents(UriComponents.AbsoluteUri & ~UriComponents.Port,
+                               UriFormat.UriEscaped);
+
                         var pubStatus = new PublishStatus(site.SiteName,
-                            site.PublishProfile.DestinationAppUrl,
+                            clean,
                             site.Databases != null && site.Databases.Count > 0,
                             contentTraceFileName,
                             dbTraceFileName);

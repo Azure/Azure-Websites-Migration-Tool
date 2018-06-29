@@ -53,7 +53,7 @@ namespace AzureAppServiceMigrationTool.Helpers
 
         public const string WebPIUrl64 = @"https://download.microsoft.com/download/C/F/F/CFF3A0B8-99D4-41A2-AE1A-496C08BEB904/WebPlatformInstaller_amd64_en-US.msi";
 
-        public const string DacfxUrlFormat = "http://go.microsoft.com/fwlink/?LinkID={0}&CLCID=0x409";
+        public const string DacfxUrlFormat = "https://go.microsoft.com/fwlink/?LinkID={0}&CLCID=0x409";
         
         public static int[] DacFxMsiArray64bit = { 239643, 239644, 239635, 239631, };
         public static int[] DacFxMsiArray32bit = { 239643, 239644, 239634, 239630, };

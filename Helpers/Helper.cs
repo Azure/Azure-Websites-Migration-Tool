@@ -377,7 +377,7 @@ namespace AzureAppServiceMigrationTool.Helpers
 
         public static string ScmSitePrimary
         {
-            get { return ConfigurationManager.AppSettings["ScmSitePrimary"] ?? "https://migrate3.scm.azurewebsites.net/migrate"; }
+            get { return ConfigurationManager.AppSettings["ScmSitePrimary"] ?? "https://migrate4.scm.azurewebsites.net/migrate"; }
         }
 
         public static string ScmSiteSecondary
