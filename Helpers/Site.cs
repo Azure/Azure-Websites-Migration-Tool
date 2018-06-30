@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace AzureAppServiceMigrationTool.Helpers
+namespace AzureAppServiceMigrationAssistant.Helpers
 {
     public enum EnabledAuthenticationType
     {

@@ -7,7 +7,7 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 
-namespace AzureAppServiceMigrationTool.Helpers
+namespace AzureAppServiceMigrationAssistant.Helpers
 {
     public class RemoteSystemInfos
     {

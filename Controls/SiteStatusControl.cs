@@ -3,10 +3,10 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using AzureAppServiceMigrationTool.Helpers;
-using AzureAppServiceMigrationTool.ObjectModel;
+using AzureAppServiceMigrationAssistant.Helpers;
+using AzureAppServiceMigrationAssistant.ObjectModel;
 
-namespace AzureAppServiceMigrationTool.Controls
+namespace AzureAppServiceMigrationAssistant.Controls
 {
     public partial class SiteStatusControl : UserControl, IWizardStep
     {

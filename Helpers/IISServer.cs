@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Web.Script.Serialization;
 using System.Windows.Forms;
 
-namespace AzureAppServiceMigrationTool.Helpers
+namespace AzureAppServiceMigrationAssistant.Helpers
 {
     [Serializable]
     public class IISServer

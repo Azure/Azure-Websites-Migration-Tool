@@ -17,7 +17,7 @@ using System.Management.Automation.Runspaces;
 using System.Text;
 using System.Web;
 
-namespace AzureAppServiceMigrationTool.Helpers
+namespace AzureAppServiceMigrationAssistant.Helpers
 {
     public static class Helper
     {

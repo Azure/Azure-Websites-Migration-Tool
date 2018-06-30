@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace AzureAppServiceMigrationTool
+namespace AzureAppServiceMigrationAssistant
 {
     public partial class AddDbConnectionDialog : Form
     {

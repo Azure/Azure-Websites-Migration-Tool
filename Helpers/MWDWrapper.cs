@@ -8,7 +8,7 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml;
-using AzureAppServiceMigrationTool.Controls;
+using AzureAppServiceMigrationAssistant.Controls;
 using Microsoft.Web.Deployment;
 using System;
 using System.Data.Sql;
@@ -16,7 +16,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Data.Common;
 
-namespace AzureAppServiceMigrationTool.Helpers
+namespace AzureAppServiceMigrationAssistant.Helpers
 {
     public abstract class PublishOperation : IDisposable
     {

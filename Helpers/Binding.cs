@@ -3,7 +3,7 @@
 // See License.txt in the project root for license information.
 using System;
 
-namespace AzureAppServiceMigrationTool.Helpers
+namespace AzureAppServiceMigrationAssistant.Helpers
 {
     public enum ProtocolType
     {

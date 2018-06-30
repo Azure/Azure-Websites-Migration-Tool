@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0.  
 // See License.txt in the project root for license information.
 
-namespace AzureAppServiceMigrationTool.Controls
+namespace AzureAppServiceMigrationAssistant.Controls
 {
     partial class MigrationSite
     {
@@ -48,7 +48,7 @@ namespace AzureAppServiceMigrationTool.Controls
             // busyPictureBox
             // 
             this.busyPictureBox.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.busyPictureBox.Image = global::AzureAppServiceMigrationTool.Properties.Resources.AnimatedProgressBar;
+            this.busyPictureBox.Image = global::AzureAppServiceMigrationAssistant.Properties.Resources.AnimatedProgressBar;
             this.busyPictureBox.Location = new System.Drawing.Point(405, 231);
             this.busyPictureBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.busyPictureBox.Name = "busyPictureBox";

@@ -4,10 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
-using AzureAppServiceMigrationTool.Controls;
+using AzureAppServiceMigrationAssistant.Controls;
 using Microsoft.Web.PlatformInstaller;
 
-namespace AzureAppServiceMigrationTool.Helpers
+namespace AzureAppServiceMigrationAssistant.Helpers
 {
     public abstract class InstallHelper : IDisposable
     {

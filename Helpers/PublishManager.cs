@@ -12,10 +12,10 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading;
 using Microsoft.Web.Deployment;
-using AzureAppServiceMigrationTool.Controls;
+using AzureAppServiceMigrationAssistant.Controls;
 using System.Windows.Forms;
 
-namespace AzureAppServiceMigrationTool.Helpers
+namespace AzureAppServiceMigrationAssistant.Helpers
 {
     internal class PublishManager
     {

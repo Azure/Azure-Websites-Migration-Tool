@@ -7,10 +7,10 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Security.Principal;
 using System.Windows.Forms;
-using AzureAppServiceMigrationTool.Helpers;
+using AzureAppServiceMigrationAssistant.Helpers;
 using Application = System.Windows.Forms.Application;
 
-namespace AzureAppServiceMigrationTool
+namespace AzureAppServiceMigrationAssistant
 {
     internal static class Program
     {

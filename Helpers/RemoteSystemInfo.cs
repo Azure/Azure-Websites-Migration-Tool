@@ -8,7 +8,7 @@ using System.Management.Automation;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
-namespace AzureAppServiceMigrationTool.Helpers
+namespace AzureAppServiceMigrationAssistant.Helpers
 {
     public class RemoteSystemInfo
     {

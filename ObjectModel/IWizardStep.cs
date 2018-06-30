@@ -4,7 +4,7 @@
 
 using System;
 
-namespace AzureAppServiceMigrationTool.ObjectModel
+namespace AzureAppServiceMigrationAssistant.ObjectModel
 {
     public interface IWizardStep
     {

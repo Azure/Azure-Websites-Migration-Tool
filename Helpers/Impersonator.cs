@@ -5,7 +5,7 @@ using System.Security;
 using System.Security.Principal;
 using System.Windows.Forms;
 
-namespace AzureAppServiceMigrationTool.Helpers
+namespace AzureAppServiceMigrationAssistant.Helpers
 {
     internal class Impersonator : IDisposable
     {

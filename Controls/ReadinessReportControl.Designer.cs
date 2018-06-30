@@ -1,4 +1,4 @@
-﻿namespace AzureAppServiceMigrationTool.Controls
+﻿namespace AzureAppServiceMigrationAssistant.Controls
 {
     partial class ReadinessReportControl
     {
@@ -154,7 +154,7 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Image = global::AzureAppServiceMigrationTool.Properties.Resources.Busy;
+            this.pictureBox1.Image = global::AzureAppServiceMigrationAssistant.Properties.Resources.Busy;
             this.pictureBox1.Location = new System.Drawing.Point(230, 46);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pictureBox1.Name = "pictureBox1";

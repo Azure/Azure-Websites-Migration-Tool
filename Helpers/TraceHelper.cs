@@ -5,7 +5,7 @@
 using System;
 using System.IO;
 
-namespace AzureAppServiceMigrationTool.Helpers
+namespace AzureAppServiceMigrationAssistant.Helpers
 {
     public static class TraceHelper
     {

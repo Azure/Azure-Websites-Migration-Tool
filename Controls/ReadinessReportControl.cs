@@ -3,8 +3,8 @@
 // See License.txt in the project root for license information.
 
 using System.IO;
-using AzureAppServiceMigrationTool.Helpers;
-using AzureAppServiceMigrationTool.ObjectModel;
+using AzureAppServiceMigrationAssistant.Helpers;
+using AzureAppServiceMigrationAssistant.ObjectModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,7 +14,7 @@ using System.Net;
 using System.Text;
 using System.Windows.Forms;
 
-namespace AzureAppServiceMigrationTool.Controls
+namespace AzureAppServiceMigrationAssistant.Controls
 {
     public partial class ReadinessReportControl : UserControl, IWizardStep
     {

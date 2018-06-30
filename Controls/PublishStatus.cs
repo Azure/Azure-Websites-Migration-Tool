@@ -4,9 +4,9 @@
 
 using System.Diagnostics;
 using System.Windows.Forms;
-using AzureAppServiceMigrationTool.Helpers;
+using AzureAppServiceMigrationAssistant.Helpers;
 
-namespace AzureAppServiceMigrationTool.Controls
+namespace AzureAppServiceMigrationAssistant.Controls
 {
     public partial class PublishStatus : UserControl
     {

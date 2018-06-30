@@ -4,7 +4,7 @@
 using System;
 using System.Data.SqlClient;
 
-namespace AzureAppServiceMigrationTool.Helpers
+namespace AzureAppServiceMigrationAssistant.Helpers
 {
     [Serializable]
     public class Database

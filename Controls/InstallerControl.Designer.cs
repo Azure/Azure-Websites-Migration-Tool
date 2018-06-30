@@ -1,4 +1,4 @@
-﻿namespace AzureAppServiceMigrationTool.Controls
+﻿namespace AzureAppServiceMigrationAssistant.Controls
 {
     partial class InstallerControl
     {
@@ -63,7 +63,7 @@
             // busyPictureBox
             // 
             this.busyPictureBox.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.busyPictureBox.Image = global::AzureAppServiceMigrationTool.Properties.Resources.icon_drawer_processing_active;
+            this.busyPictureBox.Image = global::AzureAppServiceMigrationAssistant.Properties.Resources.icon_drawer_processing_active;
             this.busyPictureBox.Location = new System.Drawing.Point(524, 235);
             this.busyPictureBox.Name = "busyPictureBox";
             this.busyPictureBox.Size = new System.Drawing.Size(24, 26);

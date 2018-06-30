@@ -1,4 +1,4 @@
-﻿namespace AzureAppServiceMigrationTool
+﻿namespace AzureAppServiceMigrationAssistant
 {
     partial class MainForm
     {

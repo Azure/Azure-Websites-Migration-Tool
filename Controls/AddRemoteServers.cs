@@ -5,10 +5,10 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Management.Automation;
 using System.Windows.Forms;
-using AzureAppServiceMigrationTool.Helpers;
-using AzureAppServiceMigrationTool.ObjectModel;
+using AzureAppServiceMigrationAssistant.Helpers;
+using AzureAppServiceMigrationAssistant.ObjectModel;
 
-namespace AzureAppServiceMigrationTool.Controls
+namespace AzureAppServiceMigrationAssistant.Controls
 {
     public partial class AddRemoteServers : UserControl, IWizardStep
     {

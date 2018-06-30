@@ -1,4 +1,4 @@
-﻿namespace AzureAppServiceMigrationTool.Controls
+﻿namespace AzureAppServiceMigrationAssistant.Controls
 {
     partial class SaveReadinessReportControl
     {

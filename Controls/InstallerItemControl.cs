@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace AzureAppServiceMigrationTool.Controls
+namespace AzureAppServiceMigrationAssistant.Controls
 {
     public partial class InstallerItemControl : UserControl
     {

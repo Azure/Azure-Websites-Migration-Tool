@@ -4,12 +4,12 @@
 
 using System.Diagnostics;
 using System.Drawing;
-using AzureAppServiceMigrationTool.Helpers;
-using AzureAppServiceMigrationTool.ObjectModel;
+using AzureAppServiceMigrationAssistant.Helpers;
+using AzureAppServiceMigrationAssistant.ObjectModel;
 using System;
 using System.Windows.Forms;
 
-namespace AzureAppServiceMigrationTool.Controls
+namespace AzureAppServiceMigrationAssistant.Controls
 {
     public partial class ConfirmationControl : UserControl, IWizardStep
     {
