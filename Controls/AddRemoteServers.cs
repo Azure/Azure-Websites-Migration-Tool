@@ -264,7 +264,7 @@ namespace AzureAppServiceMigrationAssistant.Controls
                     if (remoteSystemInfo.IISVersion >= 7 && Helper.IisVersion < 7)
                     {
                         MessageBox.Show(
-                            "To migrate sites on a web server 7 and higher, run the tool from a system running Vista or above. ",
+                            "To migrate sites on a web server 7 and higher, run the Migration Assistant from a system running Vista or above. ",
                             System.Windows.Forms.Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         RemoteSystemInfos.Servers.Remove(computerName);
                     }

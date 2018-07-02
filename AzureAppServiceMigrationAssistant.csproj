@@ -15,7 +15,7 @@
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
     <IsWebBootstrapper>true</IsWebBootstrapper>
-    <PublishUrl>C:\temp\AzureAppServiceMigrationTool\</PublishUrl>
+    <PublishUrl>C:\temp\AppServiceAssessAndMigrate\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Web</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
@@ -27,14 +27,14 @@
     <MapFileExtensions>true</MapFileExtensions>
     <InstallUrl>https://www.movemetothecloud.net/</InstallUrl>
     <SupportUrl>https://www.movemetothecloud.net/</SupportUrl>
-    <ProductName>Azure App Service Migration Tool</ProductName>
+    <ProductName>Azure App Service Migration Assistant</ProductName>
     <PublisherName>Microsoft Corporation</PublisherName>
     <SuiteName>Azure App Service</SuiteName>
     <MinimumRequiredVersion>1.0.0.1</MinimumRequiredVersion>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>clickonce.htm</WebPage>
-    <ApplicationRevision>4</ApplicationRevision>
-    <ApplicationVersion>1.0.0.4</ApplicationVersion>
+    <ApplicationRevision>5</ApplicationRevision>
+    <ApplicationVersion>1.0.0.5</ApplicationVersion>
     <UseApplicationTrust>true</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>

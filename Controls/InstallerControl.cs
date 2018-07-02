@@ -61,7 +61,7 @@ namespace AzureAppServiceMigrationAssistant.Controls
         {
             if (_installHelper.IsRebootNeeded)
             {
-                Helper.ShowErrorMessageAndExit("Reboot the system and restart the tool");
+                Helper.ShowErrorMessageAndExit("Reboot the system and restart the Migration Assistant");
             }
 
             try

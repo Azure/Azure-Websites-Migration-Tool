@@ -177,7 +177,7 @@ namespace AzureAppServiceMigrationAssistant.Controls
 
                     if (runWorkerCompletedEventArgs.Result == null)
                     {
-                        Helper.ShowErrorMessageAndExit("IIS Configuration could not be read. Please re-run the tool");
+                        Helper.ShowErrorMessageAndExit("IIS Configuration could not be read. Please re-run the Migration Assistant");
                     }
 
                     

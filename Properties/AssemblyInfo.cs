@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 
 [assembly: AssemblyTitle("Azure App Service Assess and Migrate")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Azure App Service Migration Assistant")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Microsoft")]
 [assembly: AssemblyProduct("Azure App Service Assess and Migrate")]
