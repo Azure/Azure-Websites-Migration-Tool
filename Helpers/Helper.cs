@@ -372,12 +372,12 @@ namespace AzureAppServiceMigrationAssistant.Helpers
 
         public static string PostMigratePortal
         {
-            get { return ConfigurationManager.AppSettings["PostMigratePortal"] ?? "https://migrate4.azurewebsites.net"; }
+            get { return ConfigurationManager.AppSettings["PostMigratePortal"] ?? "https://migrate3.azurewebsites.net"; }
         }
 
         public static string ScmSitePrimary
         {
-            get { return ConfigurationManager.AppSettings["ScmSitePrimary"] ?? "https://migrate4.scm.azurewebsites.net/migrate"; }
+            get { return ConfigurationManager.AppSettings["ScmSitePrimary"] ?? "https://migrate3.scm.azurewebsites.net/migrate"; }
         }
 
         public static string ScmSiteSecondary

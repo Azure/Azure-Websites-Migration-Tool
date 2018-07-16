@@ -159,7 +159,6 @@ namespace AzureAppServiceMigrationAssistant.Controls
                 req.ContentType = "application/json";
                 req.GetRequestStream().Write(fileToSend, 0, fileToSend.Length);
                 req.GetRequestStream().Close();
-
                 var response = (HttpWebResponse)req.GetResponse();
                 if (response.StatusCode != HttpStatusCode.OK && response.StatusCode != HttpStatusCode.NoContent)
                 {

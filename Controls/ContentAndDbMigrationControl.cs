@@ -261,7 +261,7 @@ namespace AzureAppServiceMigrationAssistant.Controls
                                 TraceHelper.Tracer.WriteTrace("ERROR: Skipping publish, no publish profile found for site: {0}", site.SiteName);
                                 TraceHelper.Tracer.WriteTrace("HINT: Make sure that the publish profile element for the site contains the attribute" +
                                                               " originalsitename=\"{0}:{1}\" attribute", server.Name, site.SiteName);
-                                TraceHelper.Tracer.WriteTrace("For more information see: https://migrate4.azurewebsites.net/Faq#toc12");
+                                TraceHelper.Tracer.WriteTrace("For more information see: https://www.movemetothecloud.net/Faq#toc12");
                                 continue;
                             }
 
