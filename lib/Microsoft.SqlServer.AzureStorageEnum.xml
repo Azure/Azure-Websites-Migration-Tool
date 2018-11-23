@@ -1,0 +1,238 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.SqlServer.AzureStorageEnum</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.SqlServer.Management.Smo.AzureStorageEnum.AzureStorage">
+            <summary>
+            This class implements the AzureStore level of the enumerator(root level). This level 
+            represents the Azure Storage server. Urns are this level are of the form: AzureStorage[@Name='accountname'] 
+            The following properties are exposed.
+            Name: The account name associated with this server.
+            Urn: The Urn of this enumerator object.
+            Uri: The base URI of the storage account.
+            </summary>
+        </member>
+        <member name="T:Microsoft.SqlServer.Management.Smo.AzureStorageEnum.AzureStorageEnumObject">
+            <summary>
+            <para> 
+            This is the base class of all enumerator objects in the Azure Storage hierarchy.
+            This abstract class provides implementations of the abstract entities in EnumObject, 
+            and defines a number of additional abstract entities for subclasses to implement. 
+            In short, subclasses have two responsibilities: contributing to a filter (via 
+            AddFilter) or fulfilling a request for data (via GetDataImpl). Only the final 
+            level of a request will be asked to fetch data. All intermediate levels will, at most, 
+            contribute to a filter. We support filtering on only two dimensions: blobName name and containerName name.
+            </para>
+            <para> 
+            For example, suppose we're given the urn: AzureStorage/Container[@Name='mycontainer']/Blob[@Name='myblob']
+            The will result in three calls to the GetData method in EnumObject, once for each level of the urn
+            (AzureStorage, Container, Blob, in that order). The first call will no nothing, since no filter is
+            given on the first level. The second call will add 'mycontainer' to the containerName filter.
+            The third call will add 'myblob' to the blobName filter, then will issue a request to the storage 
+            server for the attributes of the blobName 'myblob' in containerName 'mycontainer'.
+            </para>
+            <para> 
+            This class also provides some convenience methods and properties.
+            </para>
+            </summary>
+        </member>
+        <member name="M:Microsoft.SqlServer.Management.Smo.AzureStorageEnum.AzureStorageEnumObject.#ctor">
+            <summary>
+            Initializes a new instance of the AzureStorageEnumObject class, and adds properties 
+            common to all storage enumerator objects.
+            </summary>
+        </member>
+        <member name="M:Microsoft.SqlServer.Management.Smo.AzureStorageEnum.AzureStorageEnumObject.GetData(Microsoft.SqlServer.Management.Sdk.Sfc.EnumResult)">
+            <summary>
+            Implementation of the GetData method from EnumObject. The algorithm here is:
+            If we're at the first level of the urn, we construct a new AzureStorageEnumResult object.
+            This object will be passed to all subsequent calls. Next, if we're not at the final level 
+            of the urn, and our level has a filter, we add that filter to the AzureStorageEnumResult
+            object. Lastly, if we're at the final level of the enumerator, we fetch data from the 
+            storage server and package it into a DataTable.
+            </summary>
+            <param name="parent">The result from the parent request.</param>
+            <returns>An EnumResult for the current level. If we're on the final level, the result will contain a DataTable.</returns>
+        </member>
+        <member name="M:Microsoft.SqlServer.Management.Smo.AzureStorageEnum.AzureStorageEnumObject.AddFilter(Microsoft.SqlServer.Management.Smo.AzureStorageEnum.AzureStorageEnumResult)">
+            <summary>
+            Adds a filter to the given AzureStorageEnumResult.  This is called from GetData when 
+            a level specifies a filter.
+            </summary>
+            <param name="er">The current enumerator result.</param>
+        </member>
+        <member name="M:Microsoft.SqlServer.Management.Smo.AzureStorageEnum.AzureStorageEnumObject.PopulateDataTable(Microsoft.SqlServer.Management.Smo.AzureStorageEnum.AzureStorageEnumResult,System.Data.DataTable)">
+            <summary>
+            Populates a data table with a response to the current request, based on the 
+            given AzureStorageEnumResult (which keeps track of all the filters added 
+            across all levels).
+            </summary>
+            <param name="er">The current enumerator result.</param>
+            <param name="table">The table to populate.</param>
+        </member>
+        <member name="M:Microsoft.SqlServer.Management.Smo.AzureStorageEnum.AzureStorageEnumObject.AddStringProperty(System.String,Microsoft.SqlServer.Management.Sdk.Sfc.ObjectPropertyUsages)">
+            <summary>
+            Adds a string property with the given usages to this enumerator object. This property
+            will be nonexpensive.
+            </summary>
+            <param name="name">The name of the property.</param>
+            <param name="usages">The usages of the property.</param>
+        </member>
+        <member name="M:Microsoft.SqlServer.Management.Smo.AzureStorageEnum.AzureStorageEnumObject.AddProperty(System.String,System.String,Microsoft.SqlServer.Management.Sdk.Sfc.ObjectPropertyUsages)">
+            <summary>
+            Adds a property with the given type and usages to this enumerator object. This property will 
+            be nonexpensive.
+            </summary>
+            <param name="name">The name of the property.</param>
+            <param name="type">The name of the type of the property (e.g. "System.String")</param>
+            <param name="usages">The usages of the property.</param>
+        </member>
+        <member name="M:Microsoft.SqlServer.Management.Smo.AzureStorageEnum.AzureStorageEnumObject.AddProperty(System.String,System.String,Microsoft.SqlServer.Management.Sdk.Sfc.ObjectPropertyUsages,System.Boolean)">
+            <summary>
+            Adds a property with the given type and usages to this enumerator object.
+            If the expensive parameter is set to true, this property will be marked as expensive.
+            </summary>
+            <param name="name">The name of the property.</param>
+            <param name="type">The name of the type of the property (e.g. "System.String")</param>
+            <param name="usages">The usages of the property.</param>
+            <param name="expensive">Determines wheter this property is marked as expensive or not.</param>
+        </member>
+        <member name="M:Microsoft.SqlServer.Management.Smo.AzureStorageEnum.AzureStorageEnumObject.PrepareDataTable(Microsoft.SqlServer.Management.Sdk.Sfc.Request)">
+            <summary>
+            Creates a data table with columns determined by the fields in the given Request object.
+            </summary>
+            <param name="req">A request to the enumerator.</param>
+            <returns>An data table with zero rows, and a column for each requested field in the given Request object.</returns>
+        </member>
+        <member name="P:Microsoft.SqlServer.Management.Smo.AzureStorageEnum.AzureStorageEnumObject.ResultTypes">
+            <summary>
+            Returns the result types supported by this 
+            </summary>
+        </member>
+        <member name="P:Microsoft.SqlServer.Management.Smo.AzureStorageEnum.AzureStorageEnumObject.StorageConnectionInfo">
+            <summary>
+            Gets the storage connection info passed to this enumerator.
+            </summary>
+        </member>
+        <member name="P:Microsoft.SqlServer.Management.Smo.AzureStorageEnum.AzureStorageEnumObject.BlobClient">
+            <summary>
+            Gets the blobName client associated with the connection info passed to this enumerator.
+            </summary>
+        </member>
+        <member name="F:Microsoft.SqlServer.Management.Smo.AzureStorageEnum.AzureStorage.UrnSkeleton">
+            <summary>
+            The parameterized Urn for objects at this level.
+            </summary>
+        </member>
+        <member name="M:Microsoft.SqlServer.Management.Smo.AzureStorageEnum.AzureStorage.AddFilter(Microsoft.SqlServer.Management.Smo.AzureStorageEnum.AzureStorageEnumResult)">
+            <summary>
+            There is no filter at this level, so this is a NOOP.
+            </summary>
+            <param name="result">The AzureStorageEnumResult object for this enumerator query.</param>
+        </member>
+        <member name="T:Microsoft.SqlServer.Management.Smo.AzureStorageEnum.AzureStorageEnumResult">
+            <summary>
+            The class is used to build up filters as we travel down the enumerator query.
+            At the last node, we apply any filters in this object to the query we send 
+            to the azure storage server.
+            </summary>
+        </member>
+        <member name="M:Microsoft.SqlServer.Management.Smo.AzureStorageEnum.AzureStorageEnumResult.#ctor">
+            <summary>
+            Initializes a new instance of the AzureStorageEnumResult class, with empty filters.
+            </summary>
+        </member>
+        <member name="P:Microsoft.SqlServer.Management.Smo.AzureStorageEnum.AzureStorageEnumResult.ContainerFilters">
+            <summary>
+            Gets a list of container names we want to get data for.
+            </summary>
+        </member>
+        <member name="P:Microsoft.SqlServer.Management.Smo.AzureStorageEnum.AzureStorageEnumResult.BlobFilters">
+            <summary>
+            Gets a list of blob names we want to get data for.
+            </summary>
+        </member>
+        <member name="T:Microsoft.SqlServer.Management.Smo.AzureStorageEnum.Blob">
+            <summary>
+            This class implements the blobName level of the Azure Storage enumerator. This is the 
+            third level of the hierarchy. Urns are this level are of the form: 
+            AzureStorage[@Name='accountname']/Container[@Name='mycontainer']/Blob[@Name='myblob']
+            The following properties are exposed.
+            Name: The containerName name.
+            Urn: The Urn of this enumerator object.
+            Uri: The base URI of the containerName.
+            LastModifiedUtc: The base URI of the storage account.
+            Size: The size of the containerName.
+            </summary>
+        </member>
+        <member name="F:Microsoft.SqlServer.Management.Smo.AzureStorageEnum.Blob.UrnSkeleton">
+            <summary>
+            The parameterized Urn for objects at this level.
+            </summary>   
+        </member>
+        <member name="M:Microsoft.SqlServer.Management.Smo.AzureStorageEnum.Blob.AddFilter(Microsoft.SqlServer.Management.Smo.AzureStorageEnum.AzureStorageEnumResult)">
+            <summary>
+            At this level, we add any blob Name filters to the given AzureStorageEnumResult.
+            </summary>
+            <param name="er">The AzureStorageEnumResult object to which we add the filter.</param>
+        </member>
+        <member name="M:Microsoft.SqlServer.Management.Smo.AzureStorageEnum.Blob.PopulateDataTable(Microsoft.SqlServer.Management.Smo.AzureStorageEnum.AzureStorageEnumResult,System.Data.DataTable)">
+            <summary>
+            At this level, we are fetching blob data, honoring any blob filters and container filters that are present.
+            </summary>
+            <param name="er">The AzureStorageEnumResult for this query.</param>
+            <param name="table">The data table to populate.</param>
+        </member>
+        <member name="M:Microsoft.SqlServer.Management.Smo.AzureStorageEnum.Blob.AddRow(System.Data.DataTable,Microsoft.SqlServer.Management.Sdk.Sfc.Request,Microsoft.WindowsAzure.StorageClient.CloudBlob)">
+            <summary>
+            Add a row to the given data table representing the given blob. We only 
+            add the properties specified in the given Request.
+            </summary>
+            <param name="table">The data table to add a row to.</param>
+            <param name="req">A request to this enumerator.</param>
+            <param name="blob">The blob to add to the given table.</param>
+        </member>
+        <member name="T:Microsoft.SqlServer.Management.Smo.AzureStorageEnum.Container">
+            <summary>
+            This class implements the containerName level of the Azure Storage enumerator. This is the 
+            second level of the hierarchy. Urns are this level are of the form: AzureStorage[@Name='accountname']/Container[@Name='mycontainer']
+            The following properties are exposed.
+            Name: The containerName name.
+            Urn: The Urn of this enumerator object.
+            Uri: The base URI of the containerName.
+            LastModifiedUtc: The base URI of the storage account.
+            </summary>
+        </member>
+        <member name="F:Microsoft.SqlServer.Management.Smo.AzureStorageEnum.Container.UrnSkeleton">
+            <summary>
+            The parameterized Urn for objects at this level.
+            </summary>
+        </member>
+        <member name="M:Microsoft.SqlServer.Management.Smo.AzureStorageEnum.Container.AddFilter(Microsoft.SqlServer.Management.Smo.AzureStorageEnum.AzureStorageEnumResult)">
+            <summary>
+            At this level, we add any container Name filters present to the given AzureStorageEnumResult.
+            </summary>
+            <param name="er">The AzureStorageEnumResult for this query.</param>
+        </member>
+        <member name="M:Microsoft.SqlServer.Management.Smo.AzureStorageEnum.Container.PopulateDataTable(Microsoft.SqlServer.Management.Smo.AzureStorageEnum.AzureStorageEnumResult,System.Data.DataTable)">
+            <summary>
+            Retrieve data for this request. At this level, we are fetching containerName data.
+            We must honor any containerName filters present. If there is no filter, we fetch 
+            data for all containers.
+            </summary>
+            <param name="er">The AzureStorageEnumResult for this query.</param>
+            <param name="table">The data table to populate.</param>
+        </member>
+        <member name="M:Microsoft.SqlServer.Management.Smo.AzureStorageEnum.Container.AddRow(System.Data.DataTable,Microsoft.SqlServer.Management.Sdk.Sfc.Request,Microsoft.WindowsAzure.StorageClient.CloudBlobContainer)">
+            <summary>
+            Add a row to the given data table representing the given container. We only 
+            add the properties specified in the given Request.
+            </summary>
+            <param name="table">The data table to add a row to.</param>
+            <param name="req">A request to this enumerator.</param>
+            <param name="container">The container to add to the given table.</param>
+        </member>
+    </members>
+</doc>
